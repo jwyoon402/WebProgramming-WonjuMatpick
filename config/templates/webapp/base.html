@@ -1,0 +1,27 @@
+{% load static %}
+<!doctype html>
+<html lang="ko">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}원주맛픽{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a class="site-logo" href="{% url 'webapp:home' %}">🍽 원주맛픽</a>
+            <nav class="site-nav" aria-label="주요 메뉴">
+                <a href="{% url 'webapp:home' %}">홈</a>
+                <span aria-label="개발 예정 기능">맛집 찾기 · 리뷰 · 룰렛 (개발 예정)</span>
+            </nav>
+        </div>
+    </header>
+    <main class="container">
+        {% block content %}{% endblock %}
+    </main>
+    <footer class="site-footer">
+        <div class="container">원주맛픽 · 웹프로그래밍 팀 프로젝트</div>
+    </footer>
+</body>
+</html>
