@@ -1,18 +1,13 @@
 
 
-/* 모든 요소의 기본 여백 초기화 */
 
 * {
 
     margin: 0;
-
     padding: 0;
-
     box-sizing: border-box;
 
 }
-
-/* 전체 웹페이지 디자인 */
 
 body {
 
@@ -26,7 +21,6 @@ body {
 
 }
 
-/* 상단 제목 */
 
 header {
 
@@ -47,8 +41,6 @@ header h1 {
     color: #ff7138;
 
 }
-
-/* 화면 이동 메뉴 */
 
 nav {
 
@@ -82,23 +74,17 @@ nav button {
 
 }
 
-/* 각 화면의 기본 설정 */
-
 .page {
 
     display: none;
 
 }
 
-/* 현재 선택한 화면만 보이기 */
-
 .page.active {
 
     display: block;
 
 }
-
-/* 화면 제목 */
 
 h2 {
 
@@ -107,8 +93,6 @@ h2 {
     color: #ff7138;
 
 }
-
-/* 카드 디자인 */
 
 .card {
 
@@ -121,8 +105,6 @@ h2 {
     margin-bottom: 20px;
 
 }
-
-/* 입력창 디자인 */
 
 input, textarea {
 
@@ -140,8 +122,6 @@ input, textarea {
 
 }
 
-/* 리뷰 작성창 */
-
 textarea {
 
     height: 130px;
@@ -149,8 +129,6 @@ textarea {
     resize: vertical;
 
 }
-
-/* 주요 버튼 */
 
 .main-btn {
 
@@ -173,8 +151,6 @@ textarea {
     font-weight: bold;
 
 }
-
-/* 리뷰 별점 */
 
 #starBox {
 
@@ -200,8 +176,6 @@ textarea {
 
 }
 
-/* 리뷰 목록 */
-
 .review-item {
 
     background-color: white;
@@ -219,8 +193,6 @@ textarea {
     margin-top: 8px;
 
 }
-
-/* 룰렛 디자인 */
 
 #wheel {
 
@@ -260,8 +232,6 @@ textarea {
 
 }
 
-/* 룰렛 회전 애니메이션 */
-
 #wheel.spinning {
 
     animation: spin 2s ease-out;
@@ -283,8 +253,6 @@ textarea {
     }
 
 }
-
-/* 프로필 */
 
 .profile {
 
@@ -308,8 +276,6 @@ textarea {
 
 }
 
-/* 마이페이지 통계 */
-
 .stats {
 
     display: flex;
@@ -319,8 +285,6 @@ textarea {
     padding: 20px 0;
 
 }
-
-/* 팔로잉 목록 */
 
 .follow-item {
 
@@ -340,8 +304,6 @@ textarea {
 
 }
 
-/* 팔로우 버튼 */
-
 .follow-btn {
 
     padding: 9px 15px;
@@ -356,8 +318,6 @@ textarea {
 
 }
 
-/* 팔로우 취소 상태 */
-
 .follow-btn.followed {
 
     background-color: #ddd;
@@ -365,8 +325,6 @@ textarea {
     color: #333;
 
 }
-
-/* 하단 */
 
 footer {
 
