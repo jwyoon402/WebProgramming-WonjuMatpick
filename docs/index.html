@@ -1,0 +1,213 @@
+
+
+<!DOCTYPE html>
+
+<html lang="ko">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>원주맛픽</title>
+
+    <!-- 디자인 파일 연결 -->
+
+    <link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+    <!-- 상단 로고 -->
+
+    <header>
+
+        <h1>🍴 원주맛픽</h1>
+
+        <p>오늘 뭐 먹지?</p>
+
+    </header>
+
+    <!-- 화면 이동 메뉴 -->
+
+    <nav>
+
+        <button onclick="showPage('review')">리뷰</button>
+
+        <button onclick="showPage('login')">로그인</button>
+
+        <button onclick="showPage('roulette')">룰렛</button>
+
+        <button onclick="showPage('mypage')">마이페이지</button>
+
+        <button onclick="showPage('following')">팔로잉</button>
+
+    </nav>
+
+    <main>
+
+        <!-- 1. 리뷰 화면 -->
+
+        <section id="review" class="page">
+
+            <h2>맛집 리뷰</h2>
+
+            <div class="card">
+
+                <h3>리뷰 작성하기</h3>
+
+                <p>별점을 선택하세요.</p>
+
+                <div id="starBox">
+
+                    <button onclick="selectStar(1)">★</button>
+
+                    <button onclick="selectStar(2)">★</button>
+
+                    <button onclick="selectStar(3)">★</button>
+
+                    <button onclick="selectStar(4)">★</button>
+
+                    <button onclick="selectStar(5)">★</button>
+
+                </div>
+
+                <textarea id="reviewText"
+
+                    placeholder="맛집에 대한 리뷰를 작성해주세요."></textarea>
+
+                <button class="main-btn" onclick="addReview()">
+
+                    리뷰 등록하기
+
+                </button>
+
+            </div>
+
+            <h3>등록된 리뷰</h3>
+
+            <div id="reviewList"></div>
+
+        </section>
+
+        <!-- 2. 로그인 화면 -->
+
+        <section id="login" class="page">
+
+            <h2>로그인</h2>
+
+            <div class="card">
+
+                <input type="text" id="userId"
+
+                    placeholder="아이디를 입력하세요">
+
+                <input type="password" id="userPw"
+
+                    placeholder="비밀번호를 입력하세요">
+
+                <button class="main-btn" onclick="login()">
+
+                    로그인
+
+                </button>
+
+                <p id="loginMessage"></p>
+
+            </div>
+
+        </section>
+
+        <!-- 3. 룰렛 화면 -->
+
+        <section id="roulette" class="page">
+
+            <h2>오늘 뭐 먹지?</h2>
+
+            <p>메뉴를 정하지 못했다면 룰렛을 돌려보세요!</p>
+
+            <div id="wheel">
+
+                🍜
+
+            </div>
+
+            <button class="main-btn" onclick="spinRoulette()">
+
+                룰렛 돌리기
+
+            </button>
+
+            <h3 id="rouletteResult">
+
+                추천 메뉴가 여기에 표시됩니다.
+
+            </h3>
+
+        </section>
+
+        <!-- 4. 마이페이지 화면 -->
+
+        <section id="mypage" class="page">
+
+            <h2>마이페이지</h2>
+
+            <div class="card">
+
+                <div class="profile">👤</div>
+
+                <h3 id="myNickname">로그인이 필요합니다.</h3>
+
+                <p id="myId">아이디: -</p>
+
+                <div class="stats">
+
+                    <span>작성 리뷰 <b id="myReviewCount">0</b></span>
+
+                    <span>팔로잉 <b id="myFollowingCount">0</b></span>
+
+                </div>
+
+                <button class="main-btn" onclick="logout()">
+
+                    로그아웃
+
+                </button>
+
+            </div>
+
+            <h3>내가 작성한 리뷰</h3>
+
+            <div id="myReviewList"></div>
+
+        </section>
+
+        <!-- 5. 팔로잉 화면 -->
+
+        <section id="following" class="page">
+
+            <h2>친구 팔로잉</h2>
+
+            <p>다른 사용자를 팔로우해보세요.</p>
+
+            <div id="followingList"></div>
+
+        </section>
+
+    </main>
+
+    <footer>
+
+        <p>원주 지역 맛집을 한눈에! 🍊</p>
+
+    </footer>
+
+    <!-- 기능 파일 연결 -->
+
+    <script src="app.js"></script>
+
+</body>
+
+</html>
