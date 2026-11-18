@@ -1,0 +1,381 @@
+
+
+/* 모든 요소의 기본 여백 초기화 */
+
+* {
+
+    margin: 0;
+
+    padding: 0;
+
+    box-sizing: border-box;
+
+}
+
+/* 전체 웹페이지 디자인 */
+
+body {
+
+    font-family: Arial, sans-serif;
+
+    background-color: #f5f5f5;
+
+    color: #333;
+
+    padding: 15px;
+
+}
+
+/* 상단 제목 */
+
+header {
+
+    text-align: center;
+
+    background-color: white;
+
+    padding: 20px;
+
+    border-radius: 12px;
+
+    margin-bottom: 15px;
+
+}
+
+header h1 {
+
+    color: #ff7138;
+
+}
+
+/* 화면 이동 메뉴 */
+
+nav {
+
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 6px;
+
+    margin-bottom: 20px;
+
+}
+
+nav button {
+
+    flex: 1;
+
+    min-width: 65px;
+
+    padding: 12px 5px;
+
+    border: none;
+
+    border-radius: 10px;
+
+    background-color: #ff9a76;
+
+    color: white;
+
+    font-weight: bold;
+
+}
+
+/* 각 화면의 기본 설정 */
+
+.page {
+
+    display: none;
+
+}
+
+/* 현재 선택한 화면만 보이기 */
+
+.page.active {
+
+    display: block;
+
+}
+
+/* 화면 제목 */
+
+h2 {
+
+    margin-bottom: 15px;
+
+    color: #ff7138;
+
+}
+
+/* 카드 디자인 */
+
+.card {
+
+    background-color: white;
+
+    padding: 20px;
+
+    border-radius: 12px;
+
+    margin-bottom: 20px;
+
+}
+
+/* 입력창 디자인 */
+
+input, textarea {
+
+    width: 100%;
+
+    padding: 12px;
+
+    margin: 8px 0;
+
+    border: 1px solid #ccc;
+
+    border-radius: 8px;
+
+    font-size: 15px;
+
+}
+
+/* 리뷰 작성창 */
+
+textarea {
+
+    height: 130px;
+
+    resize: vertical;
+
+}
+
+/* 주요 버튼 */
+
+.main-btn {
+
+    width: 100%;
+
+    padding: 13px;
+
+    margin-top: 12px;
+
+    background-color: #ff7138;
+
+    color: white;
+
+    border: none;
+
+    border-radius: 10px;
+
+    font-size: 16px;
+
+    font-weight: bold;
+
+}
+
+/* 리뷰 별점 */
+
+#starBox {
+
+    margin: 12px 0;
+
+}
+
+#starBox button {
+
+    border: none;
+
+    background: none;
+
+    font-size: 30px;
+
+    color: #ccc;
+
+}
+
+#starBox button.selected {
+
+    color: #ff7138;
+
+}
+
+/* 리뷰 목록 */
+
+.review-item {
+
+    background-color: white;
+
+    padding: 15px;
+
+    margin: 10px 0;
+
+    border-radius: 10px;
+
+}
+
+.review-item p {
+
+    margin-top: 8px;
+
+}
+
+/* 룰렛 디자인 */
+
+#wheel {
+
+    width: 230px;
+
+    height: 230px;
+
+    margin: 30px auto;
+
+    border-radius: 50%;
+
+    background: conic-gradient(
+
+        #ff7138 0deg 60deg,
+
+        #ffd18a 60deg 120deg,
+
+        #ff9a76 120deg 180deg,
+
+        #ffe1b5 180deg 240deg,
+
+        #ff7138 240deg 300deg,
+
+        #ffd18a 300deg 360deg
+
+    );
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    font-size: 55px;
+
+    border: 5px solid white;
+
+}
+
+/* 룰렛 회전 애니메이션 */
+
+#wheel.spinning {
+
+    animation: spin 2s ease-out;
+
+}
+
+@keyframes spin {
+
+    from {
+
+        transform: rotate(0deg);
+
+    }
+
+    to {
+
+        transform: rotate(1440deg);
+
+    }
+
+}
+
+/* 프로필 */
+
+.profile {
+
+    width: 80px;
+
+    height: 80px;
+
+    margin: 10px auto;
+
+    border-radius: 50%;
+
+    background-color: #ffe1b5;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    font-size: 40px;
+
+}
+
+/* 마이페이지 통계 */
+
+.stats {
+
+    display: flex;
+
+    justify-content: space-around;
+
+    padding: 20px 0;
+
+}
+
+/* 팔로잉 목록 */
+
+.follow-item {
+
+    background-color: white;
+
+    padding: 15px;
+
+    margin: 10px 0;
+
+    border-radius: 10px;
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+}
+
+/* 팔로우 버튼 */
+
+.follow-btn {
+
+    padding: 9px 15px;
+
+    border: none;
+
+    border-radius: 20px;
+
+    background-color: #ff7138;
+
+    color: white;
+
+}
+
+/* 팔로우 취소 상태 */
+
+.follow-btn.followed {
+
+    background-color: #ddd;
+
+    color: #333;
+
+}
+
+/* 하단 */
+
+footer {
+
+    text-align: center;
+
+    margin-top: 30px;
+
+    padding: 15px;
+
+    color: #888;
+
+}
