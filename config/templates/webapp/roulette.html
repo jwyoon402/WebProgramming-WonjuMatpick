@@ -1,35 +1,35 @@
 {% extends "webapp/base.html" %}
-{% block title %}��õ �귿 | ���ָ���{% endblock %}
+{% block title %}추천 룰렛 | 원주맛픽{% endblock %}
 {% block content %}
 <section class="page">
-    <h1>��õ �귿</h1>
-    <p>��ϵ� �޴��� �ִ� ī�װ������� ������ �޴��� �̾ƺ�����.</p>
-    <ul class="chips" aria-label="���� ī�װ���">
+    <h1>추천 룰렛</h1>
+    <p>등록된 메뉴가 있는 카테고리에서 오늘의 메뉴를 뽑아보세요.</p>
+    <ul class="chips" aria-label="음식 카테고리">
         {% for value, label in categories %}<li><span>{{ label }}</span></li>{% endfor %}
     </ul>
     <form method="post" action="{% url 'webapp:roulette' %}">
         {% csrf_token %}
-        <button class="button" type="submit">{% if drawn %}�ٽ� ������{% else %}�귿 ������{% endif %}</button>
+        <button class="button" type="submit">{% if drawn %}다시 돌리기{% else %}룰렛 돌리기{% endif %}</button>
     </form>
     {% if drawn %}
-        <section class="draw-result" aria-label="�귿 ���">
+        <section class="draw-result" aria-label="룰렛 결과">
             {% if sellers %}
                 <p class="muted">{{ selected_category }}</p>
                 <h2>{{ selected_menu }}</h2>
-                {% if menu_image_url %}<img class="detail-image" src="{{ menu_image_url }}" alt="{{ selected_menu }} ����">{% endif %}
-                <h3>�Ǹ� ������</h3>
+                {% if menu_image_url %}<img class="detail-image" src="{{ menu_image_url }}" alt="{{ selected_menu }} 사진">{% endif %}
+                <h3>판매 음식점</h3>
                 <ul class="results">
                     {% for menu in sellers %}
                         <li>
                             <a class="result-card" href="{% url 'webapp:restaurant_detail' menu.restaurant_id %}">
                                 <strong>{{ menu.restaurant.name }}</strong>
-                                <span class="muted">{{ menu.restaurant.district }} �� {{ menu.price }}��</span>
+                                <span class="muted">{{ menu.restaurant.district }} · {{ menu.price }}원</span>
                             </a>
                         </li>
                     {% endfor %}
                 </ul>
             {% else %}
-                <p>���� ��õ�� �޴��� �����.</p>
+                <p>지금 추천할 메뉴가 없어요.</p>
             {% endif %}
         </section>
     {% endif %}

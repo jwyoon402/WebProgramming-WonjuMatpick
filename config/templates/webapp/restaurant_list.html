@@ -1,38 +1,38 @@
 {% extends "webapp/base.html" %}
-{% block title %}���� ã�� | ���ָ���{% endblock %}
+{% block title %}맛집 찾기 | 원주맛픽{% endblock %}
 {% block content %}
 <section class="page">
-    <h1>���� ã��</h1>
+    <h1>맛집 찾기</h1>
     <form class="filters" method="get">
         {% for field in form %}
             <div>{{ field.label_tag }}{{ field }}{{ field.errors }}</div>
         {% endfor %}
         <div class="actions">
-            <button class="button" type="submit">�˻�</button>
-            <a class="button secondary" href="{% url 'webapp:restaurant_list' %}">�ʱ�ȭ</a>
+            <button class="button" type="submit">검색</button>
+            <a class="button secondary" href="{% url 'webapp:restaurant_list' %}">초기화</a>
         </div>
     </form>
     {% if not form.errors %}
-        <p class="muted">������ {{ page.paginator.count }}��</p>
+        <p class="muted">음식점 {{ page.paginator.count }}곳</p>
         <ul class="results">
             {% for restaurant in restaurants %}
                 <li>
                     <a class="result-card" href="{% url 'webapp:restaurant_detail' restaurant.pk %}">
                         {% if restaurant.image_url %}<img class="card-image" src="{{ restaurant.image_url }}" alt="" loading="lazy">{% endif %}
-                        <span class="muted">{{ restaurant.get_category_display }} �� {{ restaurant.district }}</span>
+                        <span class="muted">{{ restaurant.get_category_display }} · {{ restaurant.district }}</span>
                         <strong>{{ restaurant.name }}</strong>
                         <span>{{ restaurant.address }}</span>
                     </a>
                 </li>
             {% empty %}
-                <li>���ǿ� �´� �������� �����.</li>
+                <li>조건에 맞는 음식점이 없어요.</li>
             {% endfor %}
         </ul>
         {% if page.has_other_pages %}
-            <nav class="actions pagination" aria-label="�˻� ��� ������">
-                {% if page.has_previous %}<a href="?{% if query_string %}{{ query_string }}&amp;{% endif %}page={{ page.previous_page_number }}">����</a>{% endif %}
+            <nav class="actions pagination" aria-label="검색 결과 페이지">
+                {% if page.has_previous %}<a href="?{% if query_string %}{{ query_string }}&amp;{% endif %}page={{ page.previous_page_number }}">이전</a>{% endif %}
                 <span>{{ page.number }} / {{ page.paginator.num_pages }}</span>
-                {% if page.has_next %}<a href="?{% if query_string %}{{ query_string }}&amp;{% endif %}page={{ page.next_page_number }}">����</a>{% endif %}
+                {% if page.has_next %}<a href="?{% if query_string %}{{ query_string }}&amp;{% endif %}page={{ page.next_page_number }}">다음</a>{% endif %}
             </nav>
         {% endif %}
     {% endif %}

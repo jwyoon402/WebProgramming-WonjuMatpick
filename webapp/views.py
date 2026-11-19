@@ -30,8 +30,8 @@ def restaurant_list(request):
                 Q(district__icontains=district) | Q(address__icontains=district)
             )
 
-        # ������������ �޴����� ������ ���� �޴� �࿡ �����մϴ�.
-        # Exists�� �Ǹ� �޴��� ���� ������ ������ ���� �� ���� ��ȯ�մϴ�.
+        # 서브쿼리에서 메뉴명과 가격을 같은 메뉴 행에 적용합니다.
+        # Exists는 판매 메뉴가 여러 개여도 음식점 행을 한 번만 반환합니다.
         eligible_menus = Menu.objects.filter(restaurant_id=OuterRef("pk"))
         if max_price is not None:
             eligible_menus = eligible_menus.filter(price__lte=max_price)
@@ -65,8 +65,8 @@ def restaurant_detail(request, pk):
 def roulette(request):
     context = {"categories": Restaurant.Category.choices}
     if request.method == "POST":
-        # (ī�װ���, �޴���) �ߺ��� ������ ���� �̸��� �޴��� �Ĵ� ���԰�
-        # ���Ƶ� �� �޴� �Ǵ� ī�װ����� ��÷���� ���������� �ʵ��� �մϴ�.
+        # (카테고리, 메뉴명) 중복을 제거해 같은 이름의 메뉴를 파는 가게가
+        # 많아도 그 메뉴 또는 카테고리가 추첨에서 유리해지지 않도록 합니다.
         candidates = (
             Menu.objects.order_by()
             .values_list("restaurant__category", "name")
@@ -79,7 +79,7 @@ def roulette(request):
         if menus_by_category:
             selected_category = choice(list(menus_by_category))
             selected_menu = choice(menus_by_category[selected_category])
-            # ��÷�� �޴��� �Ǹ�ó�� ����� ���, �� �Ǹ�ó�� ������ ����մϴ�.
+            # 추첨된 메뉴의 판매처만 결과에 담고, 각 판매처의 가격을 사용합니다.
             sellers = list(Menu.objects.select_related("restaurant").filter(
                 name=selected_menu, restaurant__category=selected_category
             ).order_by("restaurant__name", "restaurant_id"))

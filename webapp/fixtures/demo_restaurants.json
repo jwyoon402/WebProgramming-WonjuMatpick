@@ -3,13 +3,13 @@
     "model": "webapp.restaurant",
     "pk": 1,
     "fields": {
-      "name": "��� �ѳ�",
+      "name": "흥업 한끼",
       "category": "korean",
-      "district": "�����",
-      "address": "���ֽ� ����� (�ÿ���)",
+      "district": "흥업면",
+      "address": "원주시 흥업면 (시연용)",
       "phone": "",
       "image_url": "",
-      "description": "��� Ȯ���� ���� ���� �������Դϴ�."
+      "description": "기능 확인을 위한 가상 음식점입니다."
     }
   },
   {
@@ -17,7 +17,7 @@
     "pk": 1,
     "fields": {
       "restaurant": 1,
-      "name": "�����",
+      "name": "비빔밥",
       "price": 8500,
       "image_url": ""
     }
@@ -27,7 +27,7 @@
     "pk": 2,
     "fields": {
       "restaurant": 1,
-      "name": "��ġ�",
+      "name": "김치찌개",
       "price": 9000,
       "image_url": ""
     }
@@ -36,13 +36,13 @@
     "model": "webapp.restaurant",
     "pk": 2,
     "fields": {
-      "name": "�ܰ� �ո�",
+      "name": "단계 손맛",
       "category": "korean",
-      "district": "�ܰ赿",
-      "address": "���ֽ� �ܰ赿 (�ÿ���)",
+      "district": "단계동",
+      "address": "원주시 단계동 (시연용)",
       "phone": "",
       "image_url": "",
-      "description": "��� Ȯ���� ���� ���� �������Դϴ�."
+      "description": "기능 확인을 위한 가상 음식점입니다."
     }
   },
   {
@@ -50,7 +50,7 @@
     "pk": 3,
     "fields": {
       "restaurant": 2,
-      "name": "�����",
+      "name": "비빔밥",
       "price": 10000,
       "image_url": ""
     }
@@ -60,7 +60,7 @@
     "pk": 4,
     "fields": {
       "restaurant": 2,
-      "name": "��������",
+      "name": "제육덮밥",
       "price": 11000,
       "image_url": ""
     }
@@ -69,13 +69,13 @@
     "model": "webapp.restaurant",
     "pk": 3,
     "fields": {
-      "name": "���� ȫ����",
+      "name": "무실 홍반점",
       "category": "chinese",
-      "district": "���ǵ�",
-      "address": "���ֽ� ���ǵ� (�ÿ���)",
+      "district": "무실동",
+      "address": "원주시 무실동 (시연용)",
       "phone": "",
       "image_url": "",
-      "description": "��� Ȯ���� ���� ���� �������Դϴ�."
+      "description": "기능 확인을 위한 가상 음식점입니다."
     }
   },
   {
@@ -83,7 +83,7 @@
     "pk": 5,
     "fields": {
       "restaurant": 3,
-      "name": "¥���",
+      "name": "짜장면",
       "price": 7500,
       "image_url": ""
     }
@@ -93,7 +93,7 @@
     "pk": 6,
     "fields": {
       "restaurant": 3,
-      "name": "«��",
+      "name": "짬뽕",
       "price": 9500,
       "image_url": ""
     }
@@ -102,13 +102,13 @@
     "model": "webapp.restaurant",
     "pk": 4,
     "fields": {
-      "name": "��� �����",
+      "name": "흥업 라멘집",
       "category": "japanese",
-      "district": "�����",
-      "address": "���ֽ� ����� (�ÿ���)",
+      "district": "흥업면",
+      "address": "원주시 흥업면 (시연용)",
       "phone": "",
       "image_url": "",
-      "description": "��� Ȯ���� ���� ���� �������Դϴ�."
+      "description": "기능 확인을 위한 가상 음식점입니다."
     }
   },
   {
@@ -116,7 +116,7 @@
     "pk": 7,
     "fields": {
       "restaurant": 4,
-      "name": "���",
+      "name": "라멘",
       "price": 11000,
       "image_url": ""
     }
@@ -126,7 +126,7 @@
     "pk": 8,
     "fields": {
       "restaurant": 4,
-      "name": "������",
+      "name": "돈가스",
       "price": 15000,
       "image_url": ""
     }
@@ -136,7 +136,7 @@
     "pk": 9,
     "fields": {
       "restaurant": 4,
-      "name": "�̴Ͽ쵿",
+      "name": "미니우동",
       "price": 7000,
       "image_url": ""
     }
@@ -145,13 +145,13 @@
     "model": "webapp.restaurant",
     "pk": 5,
     "fields": {
-      "name": "�ܰ� ��������",
+      "name": "단계 돈가스집",
       "category": "japanese",
-      "district": "�ܰ赿",
-      "address": "���ֽ� �ܰ赿 (�ÿ���)",
+      "district": "단계동",
+      "address": "원주시 단계동 (시연용)",
       "phone": "",
       "image_url": "",
-      "description": "��� Ȯ���� ���� ���� �������Դϴ�."
+      "description": "기능 확인을 위한 가상 음식점입니다."
     }
   },
   {
@@ -159,7 +159,7 @@
     "pk": 10,
     "fields": {
       "restaurant": 5,
-      "name": "������",
+      "name": "돈가스",
       "price": 11500,
       "image_url": ""
     }
@@ -169,7 +169,7 @@
     "pk": 11,
     "fields": {
       "restaurant": 5,
-      "name": "���",
+      "name": "라멘",
       "price": 12500,
       "image_url": ""
     }
@@ -178,13 +178,13 @@
     "model": "webapp.restaurant",
     "pk": 6,
     "fields": {
-      "name": "�ݰ� �Ľ�Ÿ",
+      "name": "반곡 파스타",
       "category": "western",
-      "district": "�ݰ",
-      "address": "���ֽ� �ݰ (�ÿ���)",
+      "district": "반곡동",
+      "address": "원주시 반곡동 (시연용)",
       "phone": "",
       "image_url": "",
-      "description": "��� Ȯ���� ���� ���� �������Դϴ�."
+      "description": "기능 확인을 위한 가상 음식점입니다."
     }
   },
   {
@@ -192,7 +192,7 @@
     "pk": 12,
     "fields": {
       "restaurant": 6,
-      "name": "�丶�� �Ľ�Ÿ",
+      "name": "토마토 파스타",
       "price": 13500,
       "image_url": ""
     }
@@ -201,13 +201,13 @@
     "model": "webapp.restaurant",
     "pk": 7,
     "fields": {
-      "name": "�߾� ������",
+      "name": "중앙 떡볶이",
       "category": "snack",
-      "district": "�߾ӵ�",
-      "address": "���ֽ� �߾ӵ� (�ÿ���)",
+      "district": "중앙동",
+      "address": "원주시 중앙동 (시연용)",
       "phone": "",
       "image_url": "",
-      "description": "��� Ȯ���� ���� ���� �������Դϴ�."
+      "description": "기능 확인을 위한 가상 음식점입니다."
     }
   },
   {
@@ -215,7 +215,7 @@
     "pk": 13,
     "fields": {
       "restaurant": 7,
-      "name": "������",
+      "name": "떡볶이",
       "price": 4500,
       "image_url": ""
     }
@@ -225,7 +225,7 @@
     "pk": 14,
     "fields": {
       "restaurant": 7,
-      "name": "���",
+      "name": "김밥",
       "price": 3500,
       "image_url": ""
     }
@@ -234,13 +234,13 @@
     "model": "webapp.restaurant",
     "pk": 8,
     "fields": {
-      "name": "���� ī����",
+      "name": "무실 카레집",
       "category": "other",
-      "district": "���ǵ�",
-      "address": "���ֽ� ���ǵ� (�ÿ���)",
+      "district": "무실동",
+      "address": "원주시 무실동 (시연용)",
       "phone": "",
       "image_url": "",
-      "description": "��� Ȯ���� ���� ���� �������Դϴ�."
+      "description": "기능 확인을 위한 가상 음식점입니다."
     }
   },
   {
@@ -248,7 +248,7 @@
     "pk": 15,
     "fields": {
       "restaurant": 8,
-      "name": "ī�� ����",
+      "name": "카레 덮밥",
       "price": 10500,
       "image_url": ""
     }

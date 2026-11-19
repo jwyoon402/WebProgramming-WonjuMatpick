@@ -1,16 +1,16 @@
 {% extends "webapp/base.html" %}
-{% block title %}Ȩ | ���ָ���{% endblock %}
+{% block title %}홈 | 원주맛픽{% endblock %}
 {% block content %}
 <section class="hero">
-    <h1>���ֿ��� ���� �� ����?</h1>
-    <p>�������� �޴��� �˻��ϰų� �귿���� ���� ���� �޴��� ��󺸼���.</p>
+    <h1>원주에서 오늘 뭐 먹지?</h1>
+    <p>음식점과 메뉴를 검색하거나 룰렛으로 오늘 먹을 메뉴를 골라보세요.</p>
     <div class="actions">
-        <a class="button" href="{% url 'webapp:restaurant_list' %}">���� ã��</a>
-        <a class="button secondary" href="{% url 'webapp:roulette' %}">��õ �귿</a>
+        <a class="button" href="{% url 'webapp:restaurant_list' %}">맛집 찾기</a>
+        <a class="button secondary" href="{% url 'webapp:roulette' %}">추천 룰렛</a>
     </div>
 </section>
 <section class="category-section">
-    <h2>ī�װ����� ã��</h2>
+    <h2>카테고리로 찾기</h2>
     <ul class="chips">
         {% for value, label in categories %}
             <li><a href="{% url 'webapp:restaurant_list' %}?category={{ value }}">{{ label }}</a></li>

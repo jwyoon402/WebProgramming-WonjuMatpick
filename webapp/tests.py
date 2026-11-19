@@ -11,36 +11,36 @@ class HomePageTests(SimpleTestCase):
     def test_home_page_loads(self):
         response = self.client.get(reverse("webapp:home"))
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "���ָ���")
+        self.assertContains(response, "원주맛픽")
 
 
 class RestaurantFeatureTests(TestCase):
     @classmethod
     def setUpTestData(cls):
         cls.cheap = Restaurant.objects.create(
-            name="�ܰ� �Ĵ�", category=Restaurant.Category.JAPANESE,
-            district="�ܰ赿", address="���ֽ� �ܰ赿",
+            name="단계 식당", category=Restaurant.Category.JAPANESE,
+            district="단계동", address="원주시 단계동",
         )
         cls.expensive = Restaurant.objects.create(
-            name="��� �Ĵ�", category=Restaurant.Category.JAPANESE,
-            district="�����", address="���ֽ� �����",
+            name="흥업 식당", category=Restaurant.Category.JAPANESE,
+            district="흥업면", address="원주시 흥업면",
         )
         Menu.objects.bulk_create([
-            Menu(restaurant=cls.cheap, name="������", price=11_500),
-            Menu(restaurant=cls.cheap, name="ġ�� ������", price=12_000),
-            Menu(restaurant=cls.expensive, name="������", price=15_000),
-            Menu(restaurant=cls.expensive, name="�쵿", price=7_000),
+            Menu(restaurant=cls.cheap, name="돈가스", price=11_500),
+            Menu(restaurant=cls.cheap, name="치즈 돈가스", price=12_000),
+            Menu(restaurant=cls.expensive, name="돈가스", price=15_000),
+            Menu(restaurant=cls.expensive, name="우동", price=7_000),
         ])
 
     def test_menu_keyword_and_price_match_same_row_without_duplicate_restaurants(self):
         response = self.client.get(reverse("webapp:restaurant_list"), {
-            "keyword": "������", "category": "japanese", "max_price": "12000",
+            "keyword": "돈가스", "category": "japanese", "max_price": "12000",
         })
         self.assertEqual(list(response.context["restaurants"]), [self.cheap])
 
     def test_restaurant_name_district_and_invalid_filter(self):
         url = reverse("webapp:restaurant_list")
-        response = self.client.get(url, {"keyword": "��� �Ĵ�", "district": "���"})
+        response = self.client.get(url, {"keyword": "흥업 식당", "district": "흥업"})
         self.assertEqual(list(response.context["restaurants"]), [self.expensive])
         invalid = self.client.get(url, {"max_price": "-1"})
         self.assertIn("max_price", invalid.context["form"].errors)
@@ -48,36 +48,36 @@ class RestaurantFeatureTests(TestCase):
 
     def test_detail_shows_own_menus_only_and_unknown_restaurant_is_404(self):
         response = self.client.get(reverse("webapp:restaurant_detail", args=[self.cheap.pk]))
-        self.assertContains(response, "ġ�� ������")
-        self.assertNotContains(response, "�쵿")
+        self.assertContains(response, "치즈 돈가스")
+        self.assertNotContains(response, "우동")
         missing = self.client.get(reverse("webapp:restaurant_detail", args=[99999]))
         self.assertEqual(missing.status_code, 404)
 
     def test_roulette_shows_exact_menu_sellers_in_selected_category(self):
         other = Restaurant.objects.create(
-            name="�н���", category=Restaurant.Category.SNACK,
-            district="�߾ӵ�", address="���ֽ� �߾ӵ�",
+            name="분식집", category=Restaurant.Category.SNACK,
+            district="중앙동", address="원주시 중앙동",
         )
-        Menu.objects.create(restaurant=other, name="������", price=8000)
-        with patch("webapp.views.choice", side_effect=["japanese", "������"]):
+        Menu.objects.create(restaurant=other, name="돈가스", price=8000)
+        with patch("webapp.views.choice", side_effect=["japanese", "돈가스"]):
             response = self.client.post(reverse("webapp:roulette"))
-        self.assertEqual(response.context["selected_menu"], "������")
+        self.assertEqual(response.context["selected_menu"], "돈가스")
         self.assertEqual({menu.restaurant_id for menu in response.context["sellers"]},
                          {self.cheap.pk, self.expensive.pk})
-        self.assertNotContains(response, "�н���")
+        self.assertNotContains(response, "분식집")
 
     def test_roulette_empty_state_and_csrf(self):
         Menu.objects.all().delete()
         url = reverse("webapp:roulette")
-        self.assertContains(self.client.post(url), "���� ��õ�� �޴��� �����.")
+        self.assertContains(self.client.post(url), "지금 추천할 메뉴가 없어요.")
         self.assertEqual(Client(enforce_csrf_checks=True).post(url).status_code, 403)
 
     def test_admin_crud_updates_public_results(self):
         admin_add = reverse("admin:webapp_restaurant_add")
         payload = {
-            "name": "�ݰ� �׽�Ʈ �Ĵ�", "category": "western", "district": "�ݰ",
-            "address": "���ֽ� �ݰ", "menus-TOTAL_FORMS": 1,
-            "menus-INITIAL_FORMS": 0, "menus-0-name": "ũ�� �Ľ�Ÿ",
+            "name": "반곡 테스트 식당", "category": "western", "district": "반곡동",
+            "address": "원주시 반곡동", "menus-TOTAL_FORMS": 1,
+            "menus-INITIAL_FORMS": 0, "menus-0-name": "크림 파스타",
             "menus-0-price": 12_000, "_save": "1",
         }
         self.assertEqual(self.client.post(admin_add, payload).status_code, 302)
@@ -91,7 +91,7 @@ class RestaurantFeatureTests(TestCase):
         restaurant = Restaurant.objects.get(name=payload["name"])
         menu = restaurant.menus.get()
         search_url = reverse("webapp:restaurant_list")
-        query = {"keyword": "ũ�� �Ľ�Ÿ", "max_price": "13000"}
+        query = {"keyword": "크림 파스타", "max_price": "13000"}
         self.assertContains(self.client.get(search_url, query), restaurant.name)
         update = reverse("admin:webapp_menu_change", args=[menu.pk])
         self.assertEqual(self.client.post(update, {

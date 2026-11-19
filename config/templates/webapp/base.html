@@ -4,18 +4,18 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{% block title %}���ָ���{% endblock %}</title>
+    <title>{% block title %}원주맛픽{% endblock %}</title>
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 <body>
     <header class="site-header">
         <div class="container header-inner">
-            <a class="site-logo" href="{% url 'webapp:home' %}">���ָ���</a>
-            <nav class="site-nav" aria-label="�ֿ� �޴�">
-                <a href="{% url 'webapp:home' %}">Ȩ</a>
-                <a href="{% url 'webapp:restaurant_list' %}">���� ã��</a>
-                <a href="{% url 'webapp:roulette' %}">��õ �귿</a>
-                {% if user.is_staff %}<a href="{% url 'admin:webapp_restaurant_changelist' %}">������ ����</a>{% endif %}
+            <a class="site-logo" href="{% url 'webapp:home' %}">원주맛픽</a>
+            <nav class="site-nav" aria-label="주요 메뉴">
+                <a href="{% url 'webapp:home' %}">홈</a>
+                <a href="{% url 'webapp:restaurant_list' %}">맛집 찾기</a>
+                <a href="{% url 'webapp:roulette' %}">추천 룰렛</a>
+                {% if user.is_staff %}<a href="{% url 'admin:webapp_restaurant_changelist' %}">음식점 관리</a>{% endif %}
             </nav>
         </div>
     </header>
@@ -23,7 +23,7 @@
         {% block content %}{% endblock %}
     </main>
     <footer class="site-footer">
-        <div class="container">���ָ��� �� �����α׷��� �� ������Ʈ</div>
+        <div class="container">원주맛픽 · 웹프로그래밍 팀 프로젝트</div>
     </footer>
 </body>
 </html>
