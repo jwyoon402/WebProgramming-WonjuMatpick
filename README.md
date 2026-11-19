@@ -61,7 +61,7 @@ WebProgramming-WonjuMatpick/
 | 프론트엔드 1 | 메인, 음식점 목록·검색·상세, 관리자 화면 UI |
 | 프론트엔드 2 | 회원, 리뷰, 룰렛, 마이페이지·팔로잉 UI |
 | 백엔드 1 | Restaurant/Menu 모델, 검색·룰렛, 관리자 CRUD |
-| 백엔드 2 | 인증, Review/Follow 모델, 리뷰 CRUD, 사용자 기능 |
+| 백엔드 2 | 회원 및 리뷰 기능 : 회원가입, 로그인, 리뷰CRUD, 팔로우 기능 |
 | 5번째 조원 (통합·테스트) | GitHub 구조·문서 관리, 공통 설정 조율, 반응형 및 기능 테스트, 제출물 확인 |
 
 세부 작업 분담과 Pull Request 절차는 [팀 협업 규칙](docs/team_rules.md)을 참고하세요.
