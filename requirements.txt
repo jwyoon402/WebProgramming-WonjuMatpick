@@ -1,2 +1,2 @@
-# Python 3.10+; Django 5.2 LTS (matches course's Django 5.2 series)
-Django>=5.2,<5.3
+# Django 5.2.8 �̻��� Python 3.14�� �����մϴ�.
+Django>=5.2.8,<5.3

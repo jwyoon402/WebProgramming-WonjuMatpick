@@ -1,26 +1,20 @@
 {% extends "webapp/base.html" %}
-{% block title %}원주맛픽 | 홈{% endblock %}
+{% block title %}Ȩ | ���ָ���{% endblock %}
 {% block content %}
 <section class="hero">
-    <p class="eyebrow">원주시 맛집 탐방 서비스</p>
-    <h1>원주에서 오늘 뭐 먹지?</h1>
-    <p>원주맛픽 프로젝트의 Django 기본 화면입니다. 음식점 검색, 리뷰, 룰렛 기능은 팀원들이 구현할 예정입니다.</p>
-</section>
-<section aria-label="구현 예정 기능">
-    <h2>구현 예정 주요 기능</h2>
-    <div class="feature-list">
-        <article class="feature-card">
-            <h3>맛집 검색</h3>
-            <p>원주시 음식점을 종류별로 검색하고 상세 정보를 확인합니다.</p>
-        </article>
-        <article class="feature-card">
-            <h3>리뷰</h3>
-            <p>평점과 후기를 등록하고 다른 사용자의 리뷰를 조회합니다.</p>
-        </article>
-        <article class="feature-card">
-            <h3>오늘 뭐 먹지?</h3>
-            <p>음식 카테고리를 무작위로 추천하고 관련 맛집을 보여줍니다.</p>
-        </article>
+    <h1>���ֿ��� ���� �� ����?</h1>
+    <p>�������� �޴��� �˻��ϰų� �귿���� ���� ���� �޴��� ��󺸼���.</p>
+    <div class="actions">
+        <a class="button" href="{% url 'webapp:restaurant_list' %}">���� ã��</a>
+        <a class="button secondary" href="{% url 'webapp:roulette' %}">��õ �귿</a>
     </div>
+</section>
+<section class="category-section">
+    <h2>ī�װ����� ã��</h2>
+    <ul class="chips">
+        {% for value, label in categories %}
+            <li><a href="{% url 'webapp:restaurant_list' %}?category={{ value }}">{{ label }}</a></li>
+        {% endfor %}
+    </ul>
 </section>
 {% endblock %}

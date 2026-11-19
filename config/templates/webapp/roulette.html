@@ -1,0 +1,37 @@
+{% extends "webapp/base.html" %}
+{% block title %}��õ �귿 | ���ָ���{% endblock %}
+{% block content %}
+<section class="page">
+    <h1>��õ �귿</h1>
+    <p>��ϵ� �޴��� �ִ� ī�װ������� ������ �޴��� �̾ƺ�����.</p>
+    <ul class="chips" aria-label="���� ī�װ���">
+        {% for value, label in categories %}<li><span>{{ label }}</span></li>{% endfor %}
+    </ul>
+    <form method="post" action="{% url 'webapp:roulette' %}">
+        {% csrf_token %}
+        <button class="button" type="submit">{% if drawn %}�ٽ� ������{% else %}�귿 ������{% endif %}</button>
+    </form>
+    {% if drawn %}
+        <section class="draw-result" aria-label="�귿 ���">
+            {% if sellers %}
+                <p class="muted">{{ selected_category }}</p>
+                <h2>{{ selected_menu }}</h2>
+                {% if menu_image_url %}<img class="detail-image" src="{{ menu_image_url }}" alt="{{ selected_menu }} ����">{% endif %}
+                <h3>�Ǹ� ������</h3>
+                <ul class="results">
+                    {% for menu in sellers %}
+                        <li>
+                            <a class="result-card" href="{% url 'webapp:restaurant_detail' menu.restaurant_id %}">
+                                <strong>{{ menu.restaurant.name }}</strong>
+                                <span class="muted">{{ menu.restaurant.district }} �� {{ menu.price }}��</span>
+                            </a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>���� ��õ�� �޴��� �����.</p>
+            {% endif %}
+        </section>
+    {% endif %}
+</section>
+{% endblock %}

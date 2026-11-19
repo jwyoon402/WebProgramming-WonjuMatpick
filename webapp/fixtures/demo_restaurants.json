@@ -1,0 +1,256 @@
+[
+  {
+    "model": "webapp.restaurant",
+    "pk": 1,
+    "fields": {
+      "name": "��� �ѳ�",
+      "category": "korean",
+      "district": "�����",
+      "address": "���ֽ� ����� (�ÿ���)",
+      "phone": "",
+      "image_url": "",
+      "description": "��� Ȯ���� ���� ���� �������Դϴ�."
+    }
+  },
+  {
+    "model": "webapp.menu",
+    "pk": 1,
+    "fields": {
+      "restaurant": 1,
+      "name": "�����",
+      "price": 8500,
+      "image_url": ""
+    }
+  },
+  {
+    "model": "webapp.menu",
+    "pk": 2,
+    "fields": {
+      "restaurant": 1,
+      "name": "��ġ�",
+      "price": 9000,
+      "image_url": ""
+    }
+  },
+  {
+    "model": "webapp.restaurant",
+    "pk": 2,
+    "fields": {
+      "name": "�ܰ� �ո�",
+      "category": "korean",
+      "district": "�ܰ赿",
+      "address": "���ֽ� �ܰ赿 (�ÿ���)",
+      "phone": "",
+      "image_url": "",
+      "description": "��� Ȯ���� ���� ���� �������Դϴ�."
+    }
+  },
+  {
+    "model": "webapp.menu",
+    "pk": 3,
+    "fields": {
+      "restaurant": 2,
+      "name": "�����",
+      "price": 10000,
+      "image_url": ""
+    }
+  },
+  {
+    "model": "webapp.menu",
+    "pk": 4,
+    "fields": {
+      "restaurant": 2,
+      "name": "��������",
+      "price": 11000,
+      "image_url": ""
+    }
+  },
+  {
+    "model": "webapp.restaurant",
+    "pk": 3,
+    "fields": {
+      "name": "���� ȫ����",
+      "category": "chinese",
+      "district": "���ǵ�",
+      "address": "���ֽ� ���ǵ� (�ÿ���)",
+      "phone": "",
+      "image_url": "",
+      "description": "��� Ȯ���� ���� ���� �������Դϴ�."
+    }
+  },
+  {
+    "model": "webapp.menu",
+    "pk": 5,
+    "fields": {
+      "restaurant": 3,
+      "name": "¥���",
+      "price": 7500,
+      "image_url": ""
+    }
+  },
+  {
+    "model": "webapp.menu",
+    "pk": 6,
+    "fields": {
+      "restaurant": 3,
+      "name": "«��",
+      "price": 9500,
+      "image_url": ""
+    }
+  },
+  {
+    "model": "webapp.restaurant",
+    "pk": 4,
+    "fields": {
+      "name": "��� �����",
+      "category": "japanese",
+      "district": "�����",
+      "address": "���ֽ� ����� (�ÿ���)",
+      "phone": "",
+      "image_url": "",
+      "description": "��� Ȯ���� ���� ���� �������Դϴ�."
+    }
+  },
+  {
+    "model": "webapp.menu",
+    "pk": 7,
+    "fields": {
+      "restaurant": 4,
+      "name": "���",
+      "price": 11000,
+      "image_url": ""
+    }
+  },
+  {
+    "model": "webapp.menu",
+    "pk": 8,
+    "fields": {
+      "restaurant": 4,
+      "name": "������",
+      "price": 15000,
+      "image_url": ""
+    }
+  },
+  {
+    "model": "webapp.menu",
+    "pk": 9,
+    "fields": {
+      "restaurant": 4,
+      "name": "�̴Ͽ쵿",
+      "price": 7000,
+      "image_url": ""
+    }
+  },
+  {
+    "model": "webapp.restaurant",
+    "pk": 5,
+    "fields": {
+      "name": "�ܰ� ��������",
+      "category": "japanese",
+      "district": "�ܰ赿",
+      "address": "���ֽ� �ܰ赿 (�ÿ���)",
+      "phone": "",
+      "image_url": "",
+      "description": "��� Ȯ���� ���� ���� �������Դϴ�."
+    }
+  },
+  {
+    "model": "webapp.menu",
+    "pk": 10,
+    "fields": {
+      "restaurant": 5,
+      "name": "������",
+      "price": 11500,
+      "image_url": ""
+    }
+  },
+  {
+    "model": "webapp.menu",
+    "pk": 11,
+    "fields": {
+      "restaurant": 5,
+      "name": "���",
+      "price": 12500,
+      "image_url": ""
+    }
+  },
+  {
+    "model": "webapp.restaurant",
+    "pk": 6,
+    "fields": {
+      "name": "�ݰ� �Ľ�Ÿ",
+      "category": "western",
+      "district": "�ݰ",
+      "address": "���ֽ� �ݰ (�ÿ���)",
+      "phone": "",
+      "image_url": "",
+      "description": "��� Ȯ���� ���� ���� �������Դϴ�."
+    }
+  },
+  {
+    "model": "webapp.menu",
+    "pk": 12,
+    "fields": {
+      "restaurant": 6,
+      "name": "�丶�� �Ľ�Ÿ",
+      "price": 13500,
+      "image_url": ""
+    }
+  },
+  {
+    "model": "webapp.restaurant",
+    "pk": 7,
+    "fields": {
+      "name": "�߾� ������",
+      "category": "snack",
+      "district": "�߾ӵ�",
+      "address": "���ֽ� �߾ӵ� (�ÿ���)",
+      "phone": "",
+      "image_url": "",
+      "description": "��� Ȯ���� ���� ���� �������Դϴ�."
+    }
+  },
+  {
+    "model": "webapp.menu",
+    "pk": 13,
+    "fields": {
+      "restaurant": 7,
+      "name": "������",
+      "price": 4500,
+      "image_url": ""
+    }
+  },
+  {
+    "model": "webapp.menu",
+    "pk": 14,
+    "fields": {
+      "restaurant": 7,
+      "name": "���",
+      "price": 3500,
+      "image_url": ""
+    }
+  },
+  {
+    "model": "webapp.restaurant",
+    "pk": 8,
+    "fields": {
+      "name": "���� ī����",
+      "category": "other",
+      "district": "���ǵ�",
+      "address": "���ֽ� ���ǵ� (�ÿ���)",
+      "phone": "",
+      "image_url": "",
+      "description": "��� Ȯ���� ���� ���� �������Դϴ�."
+    }
+  },
+  {
+    "model": "webapp.menu",
+    "pk": 15,
+    "fields": {
+      "restaurant": 8,
+      "name": "ī�� ����",
+      "price": 10500,
+      "image_url": ""
+    }
+  }
+]

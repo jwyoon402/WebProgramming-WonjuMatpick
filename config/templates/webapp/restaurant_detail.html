@@ -1,0 +1,27 @@
+{% extends "webapp/base.html" %}
+{% block title %}{{ restaurant.name }} | ���ָ���{% endblock %}
+{% block content %}
+<article class="page">
+    <a class="back-link" href="{% url 'webapp:restaurant_list' %}">�� ���� ���</a>
+    <p class="muted">{{ restaurant.get_category_display }} �� {{ restaurant.district }}</p>
+    <h1>{{ restaurant.name }}</h1>
+    {% if restaurant.image_url %}<img class="detail-image" src="{{ restaurant.image_url }}" alt="{{ restaurant.name }} ��ǥ ����">{% endif %}
+    <dl class="restaurant-info">
+        <dt>�ּ�</dt><dd>{{ restaurant.address }}</dd>
+        {% if restaurant.phone %}<dt>��ȭ</dt><dd>{{ restaurant.phone }}</dd>{% endif %}
+    </dl>
+    {% if restaurant.description %}<p>{{ restaurant.description }}</p>{% endif %}
+    <h2>�޴�</h2>
+    <ul class="results">
+        {% for menu in menus %}
+            <li class="result-card">
+                {% if menu.image_url %}<img class="card-image" src="{{ menu.image_url }}" alt="" loading="lazy">{% endif %}
+                <strong>{{ menu.name }}</strong>
+                <span>{{ menu.price }}��</span>
+            </li>
+        {% empty %}
+            <li>��ϵ� �޴��� �����.</li>
+        {% endfor %}
+    </ul>
+</article>
+{% endblock %}
