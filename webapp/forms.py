@@ -24,6 +24,7 @@ class RestaurantSearchForm(forms.Form):
         label="지역", max_length=60, required=False,
         widget=forms.TextInput(attrs={"placeholder": "예: 흥업면"}),
     )
+    # 가격은 원 단위 정수, 평점은 소수 첫째 자리까지 받습니다. 비운 항목은 검색 조건에서 생략됩니다.
     max_price = forms.IntegerField(
         label="최대 메뉴 가격(원)", min_value=1, max_value=Menu.MAX_PRICE, required=False,
         widget=forms.NumberInput(attrs={"placeholder": "예: 12000"}),
@@ -53,13 +54,15 @@ class SignupForm(UserCreationForm):
 
     @transaction.atomic
     def save(self, commit=True):
-        # 사용자와 닉네임 프로필을 한 트랜잭션으로 등록합니다.
+        # Django의 사용자 생성 폼이 비밀번호를 해시합니다. DB에 저장할 때 프로필도 함께 만들며,
+        # 프로필 저장이 실패하면 같은 트랜잭션의 사용자 저장도 롤백됩니다.
         user = super().save(commit=commit)
         if commit:
             MemberProfile.objects.create(user=user, nickname=self.cleaned_data["nickname"])
         return user
 
 class ReviewPhotoField(forms.FileField):
+    # 사용자가 올린 파일과 변환 후 파일은 각각 최대 5 MiB까지 허용합니다.
     MAX_BYTES = 5 * 1024 * 1024
     MAX_PIXELS = 12_000_000
     MAX_EDGE = 6000
@@ -82,16 +85,19 @@ class ReviewPhotoField(forms.FileField):
         try:
             # 파일명과 MIME 형식 대신 실제 내용으로 확인하고 픽셀을 읽기 전에 해상도를 제한합니다.
             with Image.open(upload, formats=self.FORMATS) as image:
+                # 가로나 세로가 6,000픽셀을 넘거나 전체가 1,200만 픽셀을 넘으면 거절합니다.
                 width, height = image.size
                 if max(width, height) > self.MAX_EDGE or width * height > self.MAX_PIXELS:
                     raise forms.ValidationError("사진의 해상도가 너무 큽니다.", code="photo_dimensions")
                 if getattr(image, "is_animated", False):
                     raise forms.ValidationError("정지 사진 한 장을 선택해 주세요.", code="photo_animation")
                 mode = "RGBA" if "A" in image.getbands() or "transparency" in image.info else "RGB"
+                # 회전 정보를 픽셀에 먼저 적용해 원본 메타데이터를 제거한 뒤에도 방향을 유지합니다.
                 pixels = ImageOps.exif_transpose(image).convert(mode)
                 # 픽셀만 새 이미지에 옮겨 원본 메타데이터 및 파일명을 저장하지 않습니다.
                 clean = Image.new(mode, pixels.size)
                 clean.paste(pixels)
+                # 투명한 부분을 유지해야 하면 PNG로, 그 외에는 JPEG로 저장합니다.
                 extension, output_format = ("png", "PNG") if mode == "RGBA" else ("jpeg", "JPEG")
                 output = BytesIO()
                 clean.save(output, format=output_format)
@@ -100,6 +106,7 @@ class ReviewPhotoField(forms.FileField):
 
         if output.tell() > self.MAX_BYTES:
             raise forms.ValidationError("저장할 사진 용량은 5 MiB 이하여야 합니다.", code="photo_size")
+        # 무작위 파일명과 다시 인코딩한 데이터로 업로드 객체를 만들어 리뷰 모델에 전달합니다.
         return SimpleUploadedFile(f"{uuid4().hex}.{extension}", output.getvalue(), f"image/{extension}")
 
 
@@ -113,6 +120,7 @@ class ReviewForm(forms.ModelForm):
 
     class Meta:
         model = Review
+        # 입력 가능한 필드를 제한합니다. 작성자와 음식점은 리뷰 생성 뷰에서 결정합니다.
         fields = ("rating", "content", "photo")
         widgets = {
             "content": forms.Textarea(attrs={"rows": 5, "maxlength": 2000}),
@@ -120,6 +128,7 @@ class ReviewForm(forms.ModelForm):
         labels = {"rating": "별점 (1~5)", "content": "리뷰", "photo": "사진 (선택)"}
 
 
+# 관리자 리뷰 편집에도 일반 리뷰 화면과 같은 사진 검증 및 변환을 적용합니다.
 class AdminReviewForm(forms.ModelForm):
     photo = ReviewPhotoField()
 

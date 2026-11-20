@@ -5,6 +5,7 @@ from django.db.models import F, Q
 
 
 class Restaurant(models.Model):
+    # DB에는 검색과 룰렛에 공통으로 쓰는 영문 값을 저장하고 화면에는 한국어 이름을 표시합니다.
     class Category(models.TextChoices):
         KOREAN = "korean", "한식"
         CHINESE = "chinese", "중식"
@@ -55,6 +56,7 @@ class Menu(models.Model):
         verbose_name = "메뉴"
         verbose_name_plural = "메뉴"
         constraints = [
+            # 같은 음식점에서는 메뉴명이 한 번만 등록됩니다. 가격 범위도 DB에 저장할 때 확인합니다.
             models.UniqueConstraint(fields=["restaurant", "name"], name="unique_restaurant_menu"),
             models.CheckConstraint(
                 condition=models.Q(price__range=(1, 100_000_000)), name="menu_price_range"
@@ -78,15 +80,16 @@ class Review(models.Model):
 
     class Meta:
         ordering = ["-created_at"]
+        # 특정 음식점의 리뷰를 최근 작성순으로 조회하는 상세 및 리뷰 목록을 위한 복합 인덱스입니다.
         indexes = [models.Index(fields=["restaurant", "-created_at"], name="webapp_rev_restau_created_idx")]
 
     def __str__(self):
         return f"{self.author} - {self.restaurant} ({self.rating}/5)"
 
 
-# follower는 팔로우를 요청한 사용자, following은 팔로우 대상 사용자입니다.
 class MemberProfile(models.Model):
     # 기존 Django 사용자 모델을 유지하면서 별도로 입력한 공개 닉네임을 저장합니다.
+    # 사용자당 프로필 한 건을 연결합니다. 사용자 삭제 시 연결된 프로필도 함께 삭제됩니다.
     user = models.OneToOneField(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="member_profile"
     )
@@ -94,6 +97,8 @@ class MemberProfile(models.Model):
 
 
 class Follow(models.Model):
+    # follower는 팔로우를 시작한 사용자이고, following은 팔로우를 받는 사용자입니다.
+    # 한 쌍의 방향을 구분하므로 두 사람이 서로 팔로우하는 관계도 각각 저장할 수 있습니다.
     follower = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="following_relations")
     following = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="follower_relations")
     created_at = models.DateTimeField(auto_now_add=True)
@@ -122,7 +127,7 @@ class Favorite(models.Model):
 
 
 class LoginAttemptWindow(models.Model):
-    # 로그인 종류와 접속 주소를 키에 해시해 저장하고, 같은 시간 구간의 시도를 합산합니다.
+    # 로그인 경로와 접속 주소에서 만든 해시와 5분 구간의 시작 시각이 하나의 집계 행을 식별합니다.
     key = models.CharField(max_length=64)
     window_start = models.PositiveBigIntegerField(db_index=True)
     attempts = models.PositiveSmallIntegerField(default=0)

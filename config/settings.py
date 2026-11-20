@@ -52,9 +52,11 @@ MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
+    # CSRF 검사에서 폼 데이터를 읽기 전에 업로드 요청의 전체 길이를 검사합니다.
     "webapp.middleware.MultipartSizeLimitMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
+    # 로그인 뷰 호출 전에 경로별 POST 시도 횟수를 확인합니다.
     "webapp.middleware.LoginRateLimitMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
@@ -81,6 +83,8 @@ TEMPLATES = [
 WSGI_APPLICATION = "config.wsgi.application"
 ASGI_APPLICATION = "config.asgi.application"
 
+# Django ORM은 프로젝트의 db.sqlite3를 기본 DB로 사용합니다.
+# 음식점, 리뷰, 사용자, 세션 등의 테이블 구조는 Django 마이그레이션으로 관리합니다.
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
@@ -103,6 +107,7 @@ USE_TZ = True
 STATIC_URL = "static/"
 STATICFILES_DIRS = [BASE_DIR / "static"]
 STATIC_ROOT = BASE_DIR / "staticfiles"
+# 리뷰 사진은 미디어 저장소에 두고 리뷰 DB 행에는 저장 경로를 기록합니다.
 MEDIA_URL = os.environ.get("DJANGO_MEDIA_URL", "media/")
 MEDIA_ROOT = BASE_DIR / "media"
 # 리뷰와 관리자 리뷰 폼은 각각 사진 한 개만 받습니다.
