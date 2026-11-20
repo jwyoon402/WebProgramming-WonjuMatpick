@@ -1,0 +1,39 @@
+{% extends 'webapp/base.html' %}
+{% block title %}프로필 | 원주맛픽{% endblock %}
+{% block content %}
+<header class="form-card">
+    {% include 'webapp/_avatar.html' with person=profile_user %}
+    <h1>{{ profile_user.member_profile.nickname|default:profile_user.username }} 프로필</h1>
+    <p class="muted">@{{ profile_user.username }}</p>
+    <p>작성 리뷰 {{ reviews|length }}개</p>
+    <div class="actions">
+        <a href="{% url 'webapp:followers' profile_user.pk %}">팔로워 {{ followers_count }}</a>
+        <a href="{% url 'webapp:following' profile_user.pk %}">팔로잉 {{ following_count }}</a>
+    </div>
+    {% if user.is_authenticated and user.pk != profile_user.pk %}
+    <form method="post" action="{% url 'webapp:follow_toggle' profile_user.pk %}">
+        {% csrf_token %}
+        {% if is_following %}
+        <button class="button secondary" name="action" value="unfollow" aria-pressed="true">♥ 언팔로우</button>
+        {% else %}
+        <button class="button secondary" name="action" value="follow" aria-pressed="false">♡ 팔로우</button>
+        {% endif %}
+    </form>
+    {% endif %}
+</header>
+<h2>작성한 리뷰</h2>
+{% for review in reviews %}
+<article class="review-item">
+    <h3><a href="{% url 'webapp:restaurant_detail' review.restaurant_id %}?section=reviews#reviews">{{ review.restaurant.name }}</a> · {{ review.rating }}점</h3>
+    <p>{{ review.content }}</p>
+    {% if review.photo %}<img class="detail-image" src="{{ review.photo.url }}" alt="리뷰 사진" loading="lazy">{% endif %}
+    <small>{{ review.created_at }}</small>
+    {% if user.pk == review.author_id %}
+    <div class="actions">
+        <a href="{% url 'webapp:review_update' review.pk %}">수정</a>
+        <form method="post" action="{% url 'webapp:review_delete' review.pk %}">{% csrf_token %}<button type="submit">삭제</button></form>
+    </div>
+    {% endif %}
+</article>
+{% empty %}<p>작성한 리뷰가 없습니다.</p>{% endfor %}
+{% endblock %}

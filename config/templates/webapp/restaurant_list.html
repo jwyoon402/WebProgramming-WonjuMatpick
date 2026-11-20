@@ -21,6 +21,9 @@
                         {% if restaurant.image_url %}<img class="card-image" src="{{ restaurant.image_url }}" alt="" loading="lazy">{% endif %}
                         <span class="muted">{{ restaurant.get_category_display }} · {{ restaurant.district }}</span>
                         <strong>{{ restaurant.name }}</strong>
+                        {% if restaurant.average_rating is not None %}
+                            <span>★ {{ restaurant.average_rating|floatformat:1 }}점</span>
+                        {% endif %}
                         <span>{{ restaurant.address }}</span>
                     </a>
                 </li>

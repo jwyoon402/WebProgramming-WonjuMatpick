@@ -11,7 +11,25 @@
         {% if restaurant.phone %}<dt>전화</dt><dd>{{ restaurant.phone }}</dd>{% endif %}
     </dl>
     {% if restaurant.description %}<p>{{ restaurant.description }}</p>{% endif %}
-    <h2>메뉴</h2>
+    {% if user.is_authenticated %}
+    <form method="post" action="{% url 'webapp:set_favorite' restaurant.pk %}">
+        {% csrf_token %}
+        {% if is_favorite %}
+            <button class="button secondary" name="action" value="remove" aria-pressed="true">♥ 관심 맛집 해제</button>
+        {% else %}
+            <button class="button secondary" name="action" value="add" aria-pressed="false">♡ 관심 맛집 등록</button>
+        {% endif %}
+    </form>
+    {% else %}
+        <a class="button secondary" href="{% url 'webapp:login' %}?next={{ request.path|urlencode }}">로그인하고 관심 맛집 등록</a>
+    {% endif %}
+    <nav class="actions detail-tabs" aria-label="음식점 정보">
+        <a href="?section=menu#menu"{% if active_section == "menu" %} aria-current="page"{% endif %}>메뉴</a>
+        <a href="?section=reviews#reviews"{% if active_section == "reviews" %} aria-current="page"{% endif %}>리뷰 {{ review_count }}개</a>
+    </nav>
+    {% if review_count %}<p>평균 {{ average_rating|floatformat:1 }}점</p>{% endif %}
+    <section id="menu" aria-labelledby="menu-title"{% if active_section != "menu" %} hidden{% endif %}>
+    <h2 id="menu-title">메뉴</h2>
     <ul class="results">
         {% for menu in menus %}
             <li class="result-card">
@@ -23,5 +41,25 @@
             <li>등록된 메뉴가 없어요.</li>
         {% endfor %}
     </ul>
+    </section>
+    <section id="reviews" aria-labelledby="reviews-title"{% if active_section != "reviews" %} hidden{% endif %}>
+        <h2 id="reviews-title">리뷰</h2>
+        {% if review_count %}
+            <p>평균 {{ average_rating|floatformat:1 }}점 · 리뷰 {{ review_count }}개</p>
+        {% else %}
+            <p>등록된 리뷰가 없어요.</p>
+        {% endif %}
+        {% for review in reviews %}
+            <article>
+                <h3><a href="{% url 'webapp:profile' review.author_id %}">{{ review.author.member_profile.nickname|default:review.author.username }}</a> · {{ review.rating }}점</h3>
+                <p>{{ review.content }}</p>
+                {% if review.photo %}<img class="detail-image" src="{{ review.photo.url }}" alt="리뷰 사진" loading="lazy">{% endif %}
+            </article>
+        {% endfor %}
+        <div class="actions">
+            <a href="{% url 'webapp:review_list' restaurant.pk %}">리뷰 전체 보기</a>
+            <a href="{% url 'webapp:review_create' restaurant.pk %}">리뷰 작성</a>
+        </div>
+    </section>
 </article>
 {% endblock %}

@@ -58,3 +58,110 @@ a.result-card:hover, .chips a:hover { border-color: #9b3815; }
 .draw-result { margin-top: 20px; padding: 20px; border-radius: 12px; background: #fff8f3; }
 .draw-result h2 { margin-top: 0; }
 @media (max-width: 560px) { .filters > div { flex-basis: 100%; } }
+
+/* Team UI elements adapted for the Django templates. */
+.review-item {
+    background-color: white;
+    padding: 15px;
+    margin: 10px 0;
+    border-radius: 10px;
+}
+
+#wheel {
+    width: 230px;
+    height: 230px;
+    position: relative;
+    margin: 0 auto;
+    border-radius: 50%;
+    background: conic-gradient(
+        #ff7138 0deg 60deg,
+        #ffd18a 60deg 120deg,
+        #ff9a76 120deg 180deg,
+        #ffe1b5 180deg 240deg,
+        #ff7138 240deg 300deg,
+        #ffd18a 300deg 360deg
+    );
+    border: 5px solid white;
+}
+
+#wheel.spinning {
+    animation: spin 2s ease-out;
+    transform: rotate(var(--wheel-angle));
+}
+
+.wheel-frame { position: relative; margin: 28px auto; width: min(230px, 100%); }
+.wheel-pointer {
+    position: absolute;
+    top: -8px;
+    left: 50%;
+    z-index: 1;
+    transform: translateX(-50%);
+    border: 10px solid transparent;
+    border-top: 17px solid #6f2e19;
+}
+#wheel span {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    color: #441b11;
+    font-weight: 700;
+}
+#wheel span:nth-child(1) { top: 22%; left: 66%; }
+#wheel span:nth-child(2) { top: 50%; left: 83%; }
+#wheel span:nth-child(3) { top: 78%; left: 66%; }
+#wheel span:nth-child(4) { top: 78%; left: 34%; }
+#wheel span:nth-child(5) { top: 50%; left: 17%; }
+#wheel span:nth-child(6) { top: 22%; left: 34%; }
+
+.stats {
+    display: flex;
+    justify-content: space-around;
+    padding: 20px 0;
+}
+
+.follow-item {
+    background-color: white;
+    padding: 15px;
+    margin: 10px 0;
+    border-radius: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+#wheel { width: min(230px, 100%); height: auto; aspect-ratio: 1; }
+@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(var(--wheel-angle)); } }
+@keyframes reveal { from { opacity: 0; } to { opacity: 1; } }
+.roulette-page .reveal { animation: reveal .2s ease-out 2s backwards; }
+@media (prefers-reduced-motion: reduce) {
+    #wheel.spinning, .roulette-page .reveal { animation: none; }
+}
+.site-header { background: #fff; }
+.site-nav a, .site-nav button { padding: 8px 12px; border-radius: 10px; background: #ffe1b5; color: #6f2e19; }
+.site-nav button { border: 0; cursor: pointer; font: inherit; }
+.member-link { display: inline-flex; gap: 8px; align-items: center; overflow-wrap: anywhere; }
+.member-avatar {
+    display: inline-grid;
+    place-items: center;
+    border-radius: 50%;
+    background: #ffe1b5;
+    color: #6f2e19;
+    width: 2.4rem;
+    height: 2.4rem;
+    flex: none;
+    font-weight: 700;
+}
+.member-list { margin-top: 16px; }
+.detail-tabs { margin-top: 20px; }
+.detail-tabs a { padding: 8px 12px; border-radius: 8px; }
+.detail-tabs [aria-current="page"] { background: #ffe1b5; color: #6f2e19; font-weight: 700; }
+.home-search { margin: 14px 0; }
+.home-search input { min-width: 0; max-width: 100%; }
+.form-card { max-width: 620px; margin: 28px auto; padding: clamp(16px,4vw,28px); background: #fff8f3; border-radius: 12px; }
+.form-card p > label, .form-card fieldset { display: block; }
+.form-card fieldset { border: 0; padding: 0; }
+.form-card input:not([type=radio]):not([type=checkbox]), .form-card textarea {
+    display: block; width: 100%; padding: 10px; border: 1px solid #aaa; border-radius: 8px;
+}
+#id_rating { display: flex; flex-wrap: wrap; gap: 10px; }
+#id_rating label { display: inline-flex; align-items: center; gap: 4px; cursor: pointer; }
+.stats { flex-wrap: wrap; gap: 10px; }
+.follow-item, .review-item { border: 1px solid #ffdfc9; overflow-wrap: anywhere; }

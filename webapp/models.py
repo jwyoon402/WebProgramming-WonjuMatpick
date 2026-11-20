@@ -1,5 +1,7 @@
+from django.conf import settings
 from django.core.validators import MaxValueValidator, MinValueValidator, URLValidator
 from django.db import models
+from django.db.models import F, Q
 
 
 class Restaurant(models.Model):
@@ -61,3 +63,71 @@ class Menu(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class Review(models.Model):
+    # 리뷰는 음식점과 작성자에 연결됩니다. 음식점이 삭제되면 연결된 리뷰 행도 삭제됩니다.
+    restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE, related_name="reviews")
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="reviews")
+    rating = models.PositiveSmallIntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)])
+    content = models.TextField(max_length=2000)
+    # 사진은 reviews/ 아래에 저장하고, DB의 이 필드에는 파일 경로를 기록합니다.
+    photo = models.ImageField(upload_to="reviews/", blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ["-created_at"]
+        indexes = [models.Index(fields=["restaurant", "-created_at"], name="webapp_rev_restau_created_idx")]
+
+    def __str__(self):
+        return f"{self.author} - {self.restaurant} ({self.rating}/5)"
+
+
+# follower는 팔로우를 요청한 사용자, following은 팔로우 대상 사용자입니다.
+class MemberProfile(models.Model):
+    # 기존 Django 사용자 모델을 유지하면서 별도로 입력한 공개 닉네임을 저장합니다.
+    user = models.OneToOneField(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="member_profile"
+    )
+    nickname = models.CharField("닉네임", max_length=30)
+
+
+class Follow(models.Model):
+    follower = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="following_relations")
+    following = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="follower_relations")
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["-created_at"]
+        constraints = [
+            models.UniqueConstraint(fields=["follower", "following"], name="webapp_unique_follow_pair"),
+            # 자기 자신과의 팔로우는 DB 제약조건으로도 막습니다.
+            models.CheckConstraint(condition=~Q(follower=F("following")), name="webapp_no_self_follow"),
+        ]
+
+    def __str__(self):
+        return f"{self.follower} follows {self.following}"
+
+
+class Favorite(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="favorites")
+    restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE, related_name="favorites")
+
+    class Meta:
+        constraints = [
+            # 사용자와 음식점의 조합을 유일하게 유지해 관심 맛집의 중복 저장을 막습니다.
+            models.UniqueConstraint(fields=["user", "restaurant"], name="webapp_unique_favorite"),
+        ]
+
+
+class LoginAttemptWindow(models.Model):
+    # 로그인 종류와 접속 주소를 키에 해시해 저장하고, 같은 시간 구간의 시도를 합산합니다.
+    key = models.CharField(max_length=64)
+    window_start = models.PositiveBigIntegerField(db_index=True)
+    attempts = models.PositiveSmallIntegerField(default=0)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=["key", "window_start"], name="webapp_unique_login_window")
+        ]

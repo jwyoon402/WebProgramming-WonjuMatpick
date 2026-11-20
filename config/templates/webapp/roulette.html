@@ -1,18 +1,28 @@
 {% extends "webapp/base.html" %}
 {% block title %}추천 룰렛 | 원주맛픽{% endblock %}
 {% block content %}
-<section class="page">
-    <h1>추천 룰렛</h1>
+<section class="page roulette-page">
+    <h1>{% if drawn %}룰렛 추천 결과{% else %}추천 룰렛{% endif %}</h1>
     <p>등록된 메뉴가 있는 카테고리에서 오늘의 메뉴를 뽑아보세요.</p>
     <ul class="chips" aria-label="음식 카테고리">
         {% for value, label in categories %}<li><span>{{ label }}</span></li>{% endfor %}
     </ul>
-    <form method="post" action="{% url 'webapp:roulette' %}">
-        {% csrf_token %}
-        <button class="button" type="submit">{% if drawn %}다시 돌리기{% else %}룰렛 돌리기{% endif %}</button>
-    </form>
+    <div class="wheel-frame" aria-hidden="true">
+        <span class="wheel-pointer"></span>
+        <div id="wheel"{% if drawn and sellers %} class="spinning" style="--wheel-angle: {{ wheel_angle }}deg"{% endif %}>
+            {% for value, label in categories %}<span>{{ label }}</span>{% endfor %}
+        </div>
+    </div>
     {% if drawn %}
-        <section class="draw-result" aria-label="룰렛 결과">
+        <a class="button" href="{% url 'webapp:roulette' %}">다시 돌리기</a>
+    {% else %}
+        <form method="post" action="{% url 'webapp:roulette' %}">
+            {% csrf_token %}
+            <button class="button" type="submit">룰렛 돌리기</button>
+        </form>
+    {% endif %}
+    {% if drawn %}
+        <section class="draw-result{% if sellers %} reveal{% endif %}" aria-label="룰렛 결과">
             {% if sellers %}
                 <p class="muted">{{ selected_category }}</p>
                 <h2>{{ selected_menu }}</h2>

@@ -1,0 +1,13 @@
+{% extends 'webapp/base.html' %}
+{% block content %}
+<section class="form-card">
+    <h1>로그인</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        {% if next %}<input type="hidden" name="next" value="{{ next }}">{% endif %}
+        <button class="button" type="submit">로그인</button>
+    </form>
+    <a href="{% url 'webapp:signup' %}{% if next %}?next={{ next|urlencode }}{% endif %}">회원가입</a>
+</section>
+{% endblock %}

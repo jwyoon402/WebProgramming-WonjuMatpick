@@ -4,6 +4,7 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path
 
+# 관리자 요청은 Django 관리자에 맡기고, 서비스 요청은 webapp의 URL 설정으로 보냅니다.
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("", include("webapp.urls")),

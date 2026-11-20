@@ -1,0 +1,40 @@
+{% extends 'webapp/base.html' %}
+{% block title %}{{ restaurant.name }} 리뷰 | 원주맛픽{% endblock %}
+{% block content %}
+<h1>{{ restaurant.name }} 리뷰</h1>
+<div class="actions">
+    <a href="{% url 'webapp:restaurant_detail' restaurant_id %}?section=reviews#reviews">음식점 상세</a>
+    <a class="button" href="{% url 'webapp:review_create' restaurant_id %}">리뷰 작성</a>
+</div>
+{% for review in reviews %}
+<article class="review-item">
+    <h3>
+        <a class="member-link" href="{% url 'webapp:profile' review.author_id %}">
+            {% include 'webapp/_avatar.html' with person=review.author %}
+            {{ review.author.member_profile.nickname|default:review.author.username }}
+        </a> · {{ review.rating }}점
+    </h3>
+    <p>{{ review.content }}</p>
+    {% if review.photo %}<img src="{{ review.photo.url }}" alt="리뷰 사진" class="detail-image" loading="lazy">{% endif %}
+    <small>{{ review.created_at }}</small>
+    {% if user.pk == review.author_id %}
+    <div class="actions">
+        <a href="{% url 'webapp:review_update' review.pk %}">수정</a>
+        <form method="post" action="{% url 'webapp:review_delete' review.pk %}">{% csrf_token %}<button type="submit">삭제</button></form>
+    </div>
+    {% elif user.is_authenticated %}
+    <form method="post" action="{% url 'webapp:follow_toggle' review.author_id %}">
+        {% csrf_token %}
+        <input type="hidden" name="next" value="{{ request.get_full_path }}">
+        {% if review.follows_author %}
+        <button class="button secondary" name="action" value="unfollow" aria-pressed="true">♥ 언팔로우</button>
+        {% else %}
+        <button class="button secondary" name="action" value="follow" aria-pressed="false">♡ 작성자 팔로우</button>
+        {% endif %}
+    </form>
+    {% else %}
+    <a class="button secondary" href="{% url 'webapp:login' %}?next={{ request.get_full_path|urlencode }}">로그인하고 작성자 팔로우</a>
+    {% endif %}
+</article>
+{% empty %}<p>아직 리뷰가 없습니다.</p>{% endfor %}
+{% endblock %}

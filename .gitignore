@@ -229,10 +229,13 @@ __marimo__/
 
 # Uploaded user media, e.g. review photos
 media/
+staticfiles/
 
 # Local SQLite files in nested folders
 **/db.sqlite3
 **/db.sqlite3-journal
+**/db.sqlite3-shm
+**/db.sqlite3-wal
 
 # Editor temporary and backup files
 *.bak

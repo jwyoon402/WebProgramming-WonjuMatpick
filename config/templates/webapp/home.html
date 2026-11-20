@@ -4,6 +4,11 @@
 <section class="hero">
     <h1>원주에서 오늘 뭐 먹지?</h1>
     <p>음식점과 메뉴를 검색하거나 룰렛으로 오늘 먹을 메뉴를 골라보세요.</p>
+    <form class="actions home-search" method="get" action="{% url 'webapp:restaurant_list' %}">
+        <label for="home-keyword">음식점 또는 메뉴 이름</label>
+        <input id="home-keyword" name="keyword" maxlength="120" placeholder="예: 돈가스">
+        <button class="button" type="submit">검색</button>
+    </form>
     <div class="actions">
         <a class="button" href="{% url 'webapp:restaurant_list' %}">맛집 찾기</a>
         <a class="button secondary" href="{% url 'webapp:roulette' %}">추천 룰렛</a>
@@ -17,4 +22,14 @@
         {% endfor %}
     </ul>
 </section>
+{% if recommendation %}
+<section class="category-section">
+    <h2>오늘의 추천 맛집</h2>
+    <a class="result-card" href="{% url 'webapp:restaurant_detail' recommendation.pk %}">
+        <strong>{{ recommendation.name }}</strong>
+        <span>{{ recommendation.get_category_display }} · {{ recommendation.district }}</span>
+        {{ recommendation.address }}
+    </a>
+</section>
+{% endif %}
 {% endblock %}

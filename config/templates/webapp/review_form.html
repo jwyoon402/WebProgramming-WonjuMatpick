@@ -1,0 +1,12 @@
+{% extends 'webapp/base.html' %}
+{% block content %}
+<section class="form-card">
+    <h1>{{ title }}</h1>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button class="button" type="submit">저장</button>
+    </form>
+    <a href="{% url 'webapp:review_list' restaurant_id %}">취소</a>
+</section>
+{% endblock %}
