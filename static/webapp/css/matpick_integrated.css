@@ -1,0 +1,72 @@
+/* 원주맛픽 — 프론트엔드 1(이도연) 화면 디자인을 Django 백엔드 데이터에 연결한 목록·상세 페이지용 스타일.
+   모든 규칙을 .mp-explore 아래로 제한하여 기존 사이트 헤더/로그인/룰렛에 영향을 주지 않습니다. */
+.mp-explore {--mp-orange:#f0763b;--mp-orange-light:#ffa578;--mp-pale:#fff1e9;--mp-text:#222;--mp-sub:#666;--mp-line:#e3e3e3;box-sizing:border-box;max-width:760px;margin:22px auto 56px;color:var(--mp-text);}
+.mp-explore * {box-sizing:border-box;}
+.mp-explore a {text-decoration:none;}
+.mp-explore button,.mp-explore input,.mp-explore select {font:inherit;}
+.mp-explore .mp-pagebar {display:flex;align-items:center;gap:16px;padding:12px 4px 17px;border-bottom:1px solid var(--mp-line);}
+.mp-explore .mp-pagebar h1 {font-size:clamp(1.4rem,3vw,1.8rem);margin:0;}
+.mp-explore .mp-back {display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;border-radius:50%;background:var(--mp-pale);color:#8e411f;flex:none;}
+.mp-explore .mp-search-form {padding:19px 0 15px;}
+.mp-explore .mp-searchbox {display:flex;gap:8px;}
+.mp-explore .mp-searchbox input {flex:1;min-width:0;border:1px solid #d7c8bf;border-radius:8px;padding:11px 13px;background:#fff;}
+.mp-explore .mp-btn {border:0;background:var(--mp-orange);color:#fff;border-radius:8px;padding:10px 17px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;}
+.mp-explore .mp-btn:hover {filter:brightness(.95);}
+.mp-explore .mp-btn-outline {border:1px solid var(--mp-orange);color:#b54c20;background:#fff;}
+.mp-explore .mp-filter-wrap {margin:12px 0;}
+.mp-explore .mp-filter-wrap summary {cursor:pointer;display:inline-block;background:#f3f3f3;color:#555;border-radius:999px;padding:6px 13px;font-size:.9rem;}
+.mp-explore .mp-filter-grid {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;padding:15px 0 2px;}
+.mp-explore .mp-filter-grid label {display:flex;flex-direction:column;gap:4px;font-size:.83rem;font-weight:700;}
+.mp-explore .mp-filter-grid input {width:100%;min-width:0;border:1px solid #ccc;border-radius:7px;padding:8px 9px;background:#fff;}
+.mp-explore .mp-filter-actions {display:flex;flex-wrap:wrap;align-items:center;gap:8px;padding-top:11px;}
+.mp-explore .mp-chips {display:flex;gap:8px;overflow:auto;padding:6px 1px 11px;}
+.mp-explore .mp-chip {flex:none;border:1px solid #ffd7c4;border-radius:999px;padding:7px 15px;background:var(--mp-pale);font-size:.85rem;cursor:pointer;}
+.mp-explore .mp-chip.active {color:#fff;background:var(--mp-orange);border-color:var(--mp-orange);font-weight:700;}
+.mp-explore .mp-error,.mp-explore .errorlist {color:#aa2424;}
+.mp-explore .mp-count {margin:6px 0 15px;color:var(--mp-sub);font-size:.92rem;}
+.mp-explore .mp-restaurants {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;list-style:none;padding:0;margin:0;}
+.mp-explore .mp-restaurant-card {height:100%;display:flex;flex-direction:column;gap:6px;background:#fff;border:1px solid #edd6c9;border-radius:12px;padding:12px;overflow:hidden;}
+.mp-explore .mp-restaurant-card:hover {border-color:var(--mp-orange);box-shadow:0 4px 15px rgba(84,40,20,.09);}
+.mp-explore .mp-card-img {display:grid;place-items:center;height:174px;background:linear-gradient(135deg,#ffe4d3,#ffcaac);border-radius:8px;overflow:hidden;font-size:3rem;}
+.mp-explore .mp-card-img img {width:100%;height:100%;object-fit:cover;display:block;}
+.mp-explore .mp-card-name {font-size:1.05rem;font-weight:800;}
+.mp-explore .mp-meta {font-size:.9rem;color:var(--mp-sub);overflow-wrap:anywhere;}
+.mp-explore .mp-rating {font-weight:700;color:#de642e;}
+.mp-explore .mp-empty {padding:32px 16px;text-align:center;color:var(--mp-sub);background:#fff7f2;border-radius:9px;}
+.mp-explore .mp-pagination {display:flex;align-items:center;justify-content:center;gap:16px;padding:22px 0;}
+.mp-explore .mp-pagination a {color:#b94d22;text-decoration:underline;}
+.mp-explore .mp-detail-hero {margin:16px 0 0;height:250px;border-radius:12px;display:grid;place-items:center;overflow:hidden;background:linear-gradient(135deg,#ffe4d3,#ffc9a8);font-size:4.4rem;}
+.mp-explore .mp-detail-hero img {width:100%;height:100%;object-fit:cover;display:block;}
+.mp-explore .mp-detail-head {display:flex;align-items:flex-start;justify-content:space-between;gap:16px;padding:18px 3px;}
+.mp-explore .mp-detail-head h1 {font-size:clamp(1.35rem,3vw,1.7rem);margin:3px 0 7px;}
+.mp-explore .mp-detail-head p {margin:4px 0;}
+.mp-explore .mp-heart-form {flex:none;}
+.mp-explore .mp-heart {font-size:1.5rem;border:1px solid #ffdbcb;border-radius:50%;width:52px;height:52px;background:var(--mp-pale);color:#c45e31;cursor:pointer;}
+.mp-explore .mp-heart.on {color:#e53935;}
+.mp-explore .mp-tabs {display:flex;border-top:1px solid var(--mp-line);border-bottom:1px solid var(--mp-line);margin:8px 0 18px;}
+.mp-explore .mp-tabs a {flex:1;text-align:center;padding:11px 10px;}
+.mp-explore .mp-tabs a + a {border-left:1px solid var(--mp-line);}
+.mp-explore .mp-tabs .active {font-weight:800;color:#c25525;border-bottom:2px solid var(--mp-orange);}
+.mp-explore .mp-detail-section {padding:0 2px 20px;}
+.mp-explore .mp-detail-section h2 {font-size:1.2rem;margin:10px 0 15px;}
+.mp-explore .mp-menu-list {display:flex;flex-direction:column;gap:9px;list-style:none;padding:0;margin:0;}
+.mp-explore .mp-menu-item {display:flex;align-items:center;gap:14px;border:1px solid #f0e4dc;border-radius:10px;padding:10px;}
+.mp-explore .mp-menu-photo {display:grid;place-items:center;width:125px;height:84px;flex:none;border-radius:7px;overflow:hidden;background:linear-gradient(135deg,#ffe3d3,#ffcca8);font-size:2rem;}
+.mp-explore .mp-menu-photo img {width:100%;height:100%;object-fit:cover;}
+.mp-explore .mp-menu-info {display:flex;flex:1;min-width:0;flex-direction:column;gap:6px;}
+.mp-explore .mp-menu-price {color:var(--mp-sub);}
+.mp-explore .mp-review {padding:15px 0;border-bottom:1px solid #f0e4dc;}
+.mp-explore .mp-review h3 {margin:0 0 7px;font-size:1rem;}
+.mp-explore .mp-review p {white-space:pre-wrap;overflow-wrap:anywhere;}
+.mp-explore .mp-review img {max-width:100%;max-height:240px;object-fit:contain;border-radius:7px;}
+.mp-explore .mp-actions {display:flex;gap:10px;flex-wrap:wrap;margin-top:16px;}
+.mp-explore .mp-actions a {color:#bd4d20;text-decoration:underline;}
+.mp-explore :focus-visible {outline:2px solid #1e58a5;outline-offset:3px;}
+@media (max-width:590px) {
+ .mp-explore {margin:10px auto 35px;}
+ .mp-explore .mp-restaurants {grid-template-columns:1fr;}
+ .mp-explore .mp-filter-grid {grid-template-columns:1fr;}
+ .mp-explore .mp-card-img {height:190px;}
+ .mp-explore .mp-detail-hero {height:210px;}
+ .mp-explore .mp-menu-photo {width:105px;height:75px;}
+}

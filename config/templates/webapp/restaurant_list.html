@@ -1,43 +1,86 @@
 {% extends "webapp/base.html" %}
+{% load static %}
 {% block title %}맛집 찾기 | 원주맛픽{% endblock %}
 {% block content %}
-<section class="page">
+<link rel="stylesheet" href="{% static 'webapp/css/matpick_integrated.css' %}">
+<section class="mp-explore" aria-label="맛집 찾기">
+  <header class="mp-pagebar">
+    <a class="mp-back" href="{% url 'webapp:home' %}" aria-label="홈으로 돌아가기">&#8592;</a>
     <h1>맛집 찾기</h1>
-    <form class="filters" method="get">
-        {% for field in form %}
-            <div>{{ field.label_tag }}{{ field }}{{ field.errors }}</div>
-        {% endfor %}
-        <div class="actions">
-            <button class="button" type="submit">검색</button>
-            <a class="button secondary" href="{% url 'webapp:restaurant_list' %}">초기화</a>
-        </div>
-    </form>
-    {% if not form.errors %}
-        <p class="muted">음식점 {{ page.paginator.count }}곳</p>
-        <ul class="results">
-            {% for restaurant in restaurants %}
-                <li>
-                    <a class="result-card" href="{% url 'webapp:restaurant_detail' restaurant.pk %}">
-                        {% if restaurant.image_url %}<img class="card-image" src="{{ restaurant.image_url }}" alt="" loading="lazy">{% endif %}
-                        <span class="muted">{{ restaurant.get_category_display }} · {{ restaurant.district }}</span>
-                        <strong>{{ restaurant.name }}</strong>
-                        {% if restaurant.average_rating is not None %}
-                            <span>★ {{ restaurant.average_rating|floatformat:1 }}점</span>
-                        {% endif %}
-                        <span>{{ restaurant.address }}</span>
-                    </a>
-                </li>
-            {% empty %}
-                <li>조건에 맞는 음식점이 없어요.</li>
-            {% endfor %}
-        </ul>
-        {% if page.has_other_pages %}
-            <nav class="actions pagination" aria-label="검색 결과 페이지">
-                {% if page.has_previous %}<a href="?{% if query_string %}{{ query_string }}&amp;{% endif %}page={{ page.previous_page_number }}">이전</a>{% endif %}
-                <span>{{ page.number }} / {{ page.paginator.num_pages }}</span>
-                {% if page.has_next %}<a href="?{% if query_string %}{{ query_string }}&amp;{% endif %}page={{ page.next_page_number }}">다음</a>{% endif %}
-            </nav>
+  </header>
+
+  <form class="mp-search-form" method="get" action="{% url 'webapp:restaurant_list' %}">
+    <div class="mp-searchbox">
+      <input type="search" name="keyword" value="{{ form.keyword.value|default_if_none:'' }}" maxlength="120" placeholder="음식점 이름 또는 메뉴를 입력하세요" aria-label="음식점 또는 메뉴 검색">
+      <button class="mp-btn" type="submit">검색</button>
+    </div>
+
+    <details class="mp-filter-wrap" {% if form.district.value or form.max_price.value or form.min_rating.value or form.errors %}open{% endif %}>
+      <summary>지역 · 메뉴 가격 · 평점 필터</summary>
+      <div class="mp-filter-grid">
+        <label>지역(읍·면·동)
+          {{ form.district }}
+          {{ form.district.errors }}
+        </label>
+        <label>최대 메뉴 가격 (원)
+          {{ form.max_price }}
+          {{ form.max_price.errors }}
+        </label>
+        <label>최소 평점
+          {{ form.min_rating }}
+          {{ form.min_rating.errors }}
+        </label>
+      </div>
+      <div class="mp-filter-actions">
+        <button class="mp-btn" type="submit">필터 적용</button>
+        <a class="mp-btn mp-btn-outline" href="{% url 'webapp:restaurant_list' %}">초기화</a>
+      </div>
+    </details>
+
+    {# 선택한 카테고리는 검색 버튼에서도 유지됩니다. 칩 버튼은 마지막 카테고리 값으로 덮어씁니다. #}
+    <input type="hidden" name="category" value="{{ form.category.value|default_if_none:'' }}">
+    <div class="mp-chips" role="group" aria-label="음식 카테고리">
+      {% for value, label in form.category.field.choices %}
+        {% if value %}
+          <button type="submit" name="category" value="{% if form.category.value == value %}{% else %}{{ value }}{% endif %}"
+                  class="mp-chip{% if form.category.value == value %} active{% endif %}"
+                  aria-pressed="{% if form.category.value == value %}true{% else %}false{% endif %}">{{ label }}</button>
         {% endif %}
+      {% endfor %}
+    </div>
+    {% if form.non_field_errors %}<div class="mp-error">{{ form.non_field_errors }}</div>{% endif %}
+    {% if form.category.errors %}<div class="mp-error">{{ form.category.errors }}</div>{% endif %}
+  </form>
+
+  {% if not form.errors %}
+    <p class="mp-count">음식점 {{ page.paginator.count }}곳</p>
+    <ul class="mp-restaurants">
+      {% for restaurant in restaurants %}
+        <li>
+          <a class="mp-restaurant-card" href="{% url 'webapp:restaurant_detail' restaurant.pk %}">
+            <span class="mp-card-img">
+              {% if restaurant.image_url %}<img src="{{ restaurant.image_url }}" alt="{{ restaurant.name }} 대표 사진" loading="lazy">
+              {% else %}<span aria-hidden="true">🍽️</span>{% endif %}
+            </span>
+            <span class="mp-meta">{{ restaurant.get_category_display }} · {{ restaurant.district }}</span>
+            <strong class="mp-card-name">{{ restaurant.name }}</strong>
+            {% if restaurant.average_rating is not None %}
+              <span class="mp-rating">★ {{ restaurant.average_rating|floatformat:1 }}점</span>
+            {% else %}<span class="mp-meta">아직 등록된 평점이 없어요</span>{% endif %}
+            <span class="mp-meta">{{ restaurant.address }}</span>
+          </a>
+        </li>
+      {% empty %}
+        <li class="mp-empty">조건에 맞는 맛집이 없어요.</li>
+      {% endfor %}
+    </ul>
+    {% if page.has_other_pages %}
+      <nav class="mp-pagination" aria-label="검색 결과 페이지">
+        {% if page.has_previous %}<a href="?{% if query_string %}{{ query_string }}&amp;{% endif %}page={{ page.previous_page_number }}">이전</a>{% endif %}
+        <span>{{ page.number }} / {{ page.paginator.num_pages }}</span>
+        {% if page.has_next %}<a href="?{% if query_string %}{{ query_string }}&amp;{% endif %}page={{ page.next_page_number }}">다음</a>{% endif %}
+      </nav>
     {% endif %}
+  {% endif %}
 </section>
 {% endblock %}

@@ -1,34 +1,72 @@
 {% extends 'webapp/base.html' %}
 {% block title %}{{ title }} | 원주맛픽{% endblock %}
 {% block content %}
-<section class="page">
-    <a class="back-link" href="{% url 'webapp:profile' profile_user.pk %}">← 프로필로 돌아가기</a>
+<style>
+  .follow-screen { max-width: 1000px; margin: 40px auto 70px; }
+  .follow-screen * { box-sizing: border-box; }
+  .follow-screen .follow-back { display: inline-block; margin-bottom: 20px; color: #a33c15; text-decoration: underline; text-underline-offset: 3px; }
+  .follow-screen .follow-heading { margin-bottom: 24px; }
+  .follow-screen .follow-heading h1 { margin: 0 0 7px; font-size: clamp(1.7rem, 4vw, 2.4rem); line-height: 1.35; }
+  .follow-screen .follow-heading p { margin: 0; color: #6c6060; }
+  .follow-screen .follow-search { display: flex; flex-wrap: wrap; gap: 10px; align-items: end; padding: 20px; border: 1px solid #ffdac7; background: #fff8f4; border-radius: 18px; margin-bottom: 20px; }
+  .follow-screen .follow-search label { display: block; flex: 1 1 250px; font-weight: 700; }
+  .follow-screen .follow-search input { display: block; width: 100%; padding: 12px 14px; margin-top: 8px; border: 1px solid #d9c6b9; border-radius: 10px; font: inherit; background: white; }
+  .follow-screen .follow-btn { display: inline-block; border: 1px solid #ff7138; border-radius: 10px; background: #ff7138; padding: 11px 18px; color: white; font: inherit; font-weight: 700; cursor: pointer; text-align: center; text-decoration: none; }
+  .follow-screen .follow-btn.secondary { background: white; color: #a53b15; }
+  .follow-screen .follow-count { margin: 10px 0 15px; color: #766962; }
+  .follow-screen .follow-people { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; }
+  .follow-screen .follow-person { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 18px; padding: 20px 24px; border: 1px solid #ffdac7; border-radius: 17px; background: #fff; }
+  .follow-screen .follow-member { display: flex; align-items: center; flex-wrap: wrap; gap: 13px; min-width: 0; }
+  .follow-screen .follow-member a { display: inline-flex; align-items: center; gap: 12px; color: inherit; text-decoration: none; font-weight: 700; font-size: 1.05rem; overflow-wrap: anywhere; }
+  .follow-screen .follow-member .member-avatar { width: 52px; height: 52px; }
+  .follow-screen .follow-person-stats { margin: 5px 0 0; font-size: .88rem; color: #6c6060; }
+  .follow-screen .follow-person form { margin: 0; }
+  .follow-screen .follow-empty { padding: 34px 24px; border: 1px dashed #f6c3ac; border-radius: 16px; color: #766962; background: #fff9f5; }
+  @media (max-width: 600px) {
+    .follow-screen { margin: 25px auto 45px; }
+    .follow-screen .follow-search .follow-btn { flex: 1 1 auto; }
+    .follow-screen .follow-person { padding: 17px; }
+    .follow-screen .follow-person form { width: 100%; }
+    .follow-screen .follow-person form .follow-btn { width: 100%; }
+  }
+</style>
+<section class="follow-screen">
+  <a class="follow-back" href="{% url 'webapp:profile' profile_user.pk %}">← 프로필로 돌아가기</a>
+  <div class="follow-heading">
     <h1>{{ profile_user.member_profile.nickname|default:profile_user.username }}님의 {{ title }}</h1>
-    <form class="actions" method="get">
-        <label for="nickname-search">닉네임 또는 아이디</label>
-        <input id="nickname-search" name="q" value="{{ keyword }}" maxlength="30">
-        <button class="button" type="submit">검색</button>
-        {% if keyword %}<a href="{{ request.path }}">초기화</a>{% endif %}
-    </form>
-    <ul class="results member-list">
-        {% for person in people %}
-        <li class="result-card">
-            <a class="member-link" href="{% url 'webapp:profile' person.pk %}">
-                {% include 'webapp/_avatar.html' %}
-                <strong>{{ person.member_profile.nickname|default:person.username }}</strong>
+    <p>사용자와 리뷰 활동을 확인해 보세요.</p>
+  </div>
+  <form class="follow-search" method="get">
+    <label for="nickname-search">닉네임 또는 아이디 검색
+      <input id="nickname-search" name="q" value="{{ keyword }}" maxlength="30" placeholder="닉네임 또는 아이디 입력">
+    </label>
+    <button class="follow-btn" type="submit">검색</button>
+    {% if keyword %}<a class="follow-btn secondary" href="{{ request.path }}">초기화</a>{% endif %}
+  </form>
+  <p class="follow-count">{{ title }} · {{ people|length }}명{% if keyword %} (검색 결과){% endif %}</p>
+  <ul class="follow-people">
+    {% for person in people %}
+      <li class="follow-person">
+        <div>
+          <div class="follow-member">
+            <a href="{% url 'webapp:profile' person.pk %}">
+              {% include 'webapp/_avatar.html' with person=person %}
+              <span>{{ person.member_profile.nickname|default:person.username }}</span>
             </a>
-            <span>팔로워 {{ person.followers_count }} · 팔로잉 {{ person.following_count }} · 리뷰 {{ person.review_count }}</span>
-            {% if can_unfollow %}
-            <form method="post" action="{% url 'webapp:follow_toggle' person.pk %}">
-                {% csrf_token %}
-                <input type="hidden" name="next" value="{{ request.get_full_path }}">
-                <button class="button secondary" name="action" value="unfollow">언팔로우</button>
-            </form>
-            {% endif %}
-        </li>
-        {% empty %}
-        <li>{% if keyword %}검색 조건에 맞는 사용자가 없어요.{% else %}목록이 비어 있습니다.{% endif %}</li>
-        {% endfor %}
-    </ul>
+          </div>
+          <p class="follow-person-stats">팔로워 {{ person.followers_count }} · 팔로잉 {{ person.following_count }} · 리뷰 {{ person.review_count }}</p>
+        </div>
+        {% if can_unfollow %}
+          <form method="post" action="{% url 'webapp:follow_toggle' person.pk %}">
+            {% csrf_token %}
+            <input type="hidden" name="next" value="{{ request.get_full_path }}">
+            <button class="follow-btn secondary" type="submit" name="action" value="unfollow">언팔로우</button>
+          </form>
+        {% endif %}
+      </li>
+    {% empty %}
+      <li class="follow-empty">{% if keyword %}검색 조건에 맞는 사용자가 없어요.{% else %}아직 목록이 비어 있어요. 음식점 리뷰에서 다른 사용자를 팔로우해 보세요.{% endif %}</li>
+    {% endfor %}
+  </ul>
 </section>
 {% endblock %}

@@ -1,39 +1,88 @@
 {% extends 'webapp/base.html' %}
-{% block title %}프로필 | 원주맛픽{% endblock %}
+{% block title %}{{ profile_user.member_profile.nickname|default:profile_user.username }} 프로필 | 원주맛픽{% endblock %}
 {% block content %}
-<header class="form-card">
-    {% include 'webapp/_avatar.html' with person=profile_user %}
-    <h1>{{ profile_user.member_profile.nickname|default:profile_user.username }} 프로필</h1>
-    <p class="muted">@{{ profile_user.username }}</p>
-    <p>작성 리뷰 {{ reviews|length }}개</p>
-    <div class="actions">
-        <a href="{% url 'webapp:followers' profile_user.pk %}">팔로워 {{ followers_count }}</a>
-        <a href="{% url 'webapp:following' profile_user.pk %}">팔로잉 {{ following_count }}</a>
+<style>
+  .mp-profile { width: min(100%, 940px); margin: 34px auto 60px; }
+  .mp-profile * { box-sizing: border-box; }
+  .mp-profile h1, .mp-profile h2, .mp-profile h3 { line-height: 1.35; }
+  .mp-profile .mp-user-card { border: 1px solid #ffdcc8; background: #fff8f4; border-radius: 22px; padding: clamp(20px, 5vw, 38px); }
+  .mp-profile .mp-user-head { display: flex; align-items: center; gap: 19px; flex-wrap: wrap; }
+  .mp-profile .mp-user-head .member-avatar { width: 76px; height: 76px; font-size: 30px; box-shadow: 0 2px 8px #6f2e1910; }
+  .mp-profile .mp-user-name { margin: 0 0 5px; font-size: clamp(26px, 4vw, 35px); }
+  .mp-profile .mp-username { color: #76645a; margin: 0; }
+  .mp-profile .mp-stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin: 28px 0 0; }
+  .mp-profile .mp-stat { text-align: center; background: white; border: 1px solid #f3e1d7; border-radius: 13px; padding: 16px 8px; color: inherit; }
+  .mp-profile .mp-stat strong { display: block; font-size: 26px; color: #a83c17; }
+  .mp-profile .mp-stat span { color: #65534a; font-size: 14px; }
+  .mp-profile .mp-actions { margin-top: 22px; display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+  .mp-profile .mp-btn { display: inline-block; background: #ff7138; color: white; padding: 11px 18px; border-radius: 10px; border: 1px solid #ff7138; cursor: pointer; font: inherit; font-weight: 700; }
+  .mp-profile .mp-btn.secondary { background: white; color: #a83c17; border-color: #ffccb3; }
+  .mp-profile .mp-section-title { margin: 38px 0 18px; font-size: 25px; }
+  .mp-profile .mp-review-card { border: 1px solid #ffdcc8; border-radius: 18px; padding: clamp(16px, 3vw, 25px); margin-bottom: 16px; background: #fff; }
+  .mp-profile .mp-review-head { display: flex; justify-content: space-between; gap: 12px; align-items: baseline; flex-wrap: wrap; }
+  .mp-profile .mp-review-head h3 { margin: 0; font-size: 20px; }
+  .mp-profile .mp-rating { color: #ef6935; font-weight: 700; }
+  .mp-profile .mp-date { color: #76645a; font-size: 13px; }
+  .mp-profile .mp-review-text { white-space: pre-wrap; overflow-wrap: anywhere; }
+  .mp-profile .mp-review-image { display: block; width: min(100%, 320px); max-height: 240px; object-fit: cover; border-radius: 12px; margin: 12px 0; }
+  .mp-profile .mp-review-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; margin-top: 15px; }
+  .mp-profile .mp-review-actions form { margin: 0; }
+  .mp-profile .mp-empty { border: 1px dashed #e9c7b7; background: #fffaf7; padding: 30px; border-radius: 16px; color: #76645a; }
+  @media (max-width: 480px) { .mp-profile .mp-stats { gap: 5px; } .mp-profile .mp-stat { padding: 14px 3px; } .mp-profile .mp-stat strong { font-size: 21px; } }
+</style>
+<div class="mp-profile">
+  <section class="mp-user-card" aria-labelledby="mp-title">
+    <div class="mp-user-head">
+      {% include 'webapp/_avatar.html' with person=profile_user %}
+      <div>
+        <h1 class="mp-user-name" id="mp-title">{{ profile_user.member_profile.nickname|default:profile_user.username }}</h1>
+        <p class="mp-username">@{{ profile_user.username }}</p>
+      </div>
     </div>
-    {% if user.is_authenticated and user.pk != profile_user.pk %}
-    <form method="post" action="{% url 'webapp:follow_toggle' profile_user.pk %}">
+    <div class="mp-stats" aria-label="사용자 활동">
+      <div class="mp-stat"><strong>{{ reviews|length }}</strong><span>작성 리뷰</span></div>
+      <a class="mp-stat" href="{% url 'webapp:followers' profile_user.pk %}"><strong>{{ followers_count }}</strong><span>팔로워</span></a>
+      <a class="mp-stat" href="{% url 'webapp:following' profile_user.pk %}"><strong>{{ following_count }}</strong><span>팔로잉</span></a>
+    </div>
+    <div class="mp-actions">
+      {% if user.is_authenticated and user.pk != profile_user.pk %}
+      <form method="post" action="{% url 'webapp:follow_toggle' profile_user.pk %}">
         {% csrf_token %}
+        <input type="hidden" name="next" value="{{ request.get_full_path }}">
         {% if is_following %}
-        <button class="button secondary" name="action" value="unfollow" aria-pressed="true">♥ 언팔로우</button>
+          <button class="mp-btn secondary" type="submit" name="action" value="unfollow" aria-pressed="true">♥ 팔로우 취소</button>
         {% else %}
-        <button class="button secondary" name="action" value="follow" aria-pressed="false">♡ 팔로우</button>
+          <button class="mp-btn" type="submit" name="action" value="follow" aria-pressed="false">♡ 팔로우</button>
         {% endif %}
-    </form>
-    {% endif %}
-</header>
-<h2>작성한 리뷰</h2>
-{% for review in reviews %}
-<article class="review-item">
-    <h3><a href="{% url 'webapp:restaurant_detail' review.restaurant_id %}?section=reviews#reviews">{{ review.restaurant.name }}</a> · {{ review.rating }}점</h3>
-    <p>{{ review.content }}</p>
-    {% if review.photo %}<img class="detail-image" src="{{ review.photo.url }}" alt="리뷰 사진" loading="lazy">{% endif %}
-    <small>{{ review.created_at }}</small>
+      </form>
+      {% elif not user.is_authenticated %}
+        <a class="mp-btn secondary" href="{% url 'webapp:login' %}?next={{ request.path|urlencode }}">로그인하고 팔로우하기</a>
+      {% else %}
+        <a class="mp-btn secondary" href="{% url 'webapp:favorite_list' %}">내 관심 맛집</a>
+      {% endif %}
+    </div>
+  </section>
+  <h2 class="mp-section-title">작성한 리뷰</h2>
+  {% for review in reviews %}
+  <article class="mp-review-card">
+    <div class="mp-review-head">
+      <h3><a href="{% url 'webapp:restaurant_detail' review.restaurant_id %}?section=reviews#reviews">{{ review.restaurant.name }}</a> <span class="mp-rating">★ {{ review.rating }}점</span></h3>
+      <time class="mp-date" datetime="{{ review.created_at|date:'c' }}">{{ review.created_at|date:'Y.m.d H:i' }}</time>
+    </div>
+    <p class="mp-review-text">{{ review.content }}</p>
+    {% if review.photo %}<img class="mp-review-image" src="{{ review.photo.url }}" alt="리뷰 첨부 사진" loading="lazy">{% endif %}
     {% if user.pk == review.author_id %}
-    <div class="actions">
-        <a href="{% url 'webapp:review_update' review.pk %}">수정</a>
-        <form method="post" action="{% url 'webapp:review_delete' review.pk %}">{% csrf_token %}<button type="submit">삭제</button></form>
+    <div class="mp-review-actions">
+      <a class="mp-btn secondary" href="{% url 'webapp:review_update' review.pk %}">수정</a>
+      <form method="post" action="{% url 'webapp:review_delete' review.pk %}">
+        {% csrf_token %}
+        <button class="mp-btn secondary" type="submit">삭제</button>
+      </form>
     </div>
     {% endif %}
-</article>
-{% empty %}<p>작성한 리뷰가 없습니다.</p>{% endfor %}
+  </article>
+  {% empty %}
+  <p class="mp-empty">아직 작성한 리뷰가 없어요. 맛집을 방문하고 첫 리뷰를 남겨보세요.</p>
+  {% endfor %}
+</div>
 {% endblock %}
