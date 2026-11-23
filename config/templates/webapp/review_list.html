@@ -1,0 +1,97 @@
+{% extends 'webapp/base.html' %}
+{% block title %}{{ restaurant.name }} 리뷰 | 원주맛픽{% endblock %}
+{% block content %}
+<style>
+/* 리뷰 목록 화면 전용 스타일: 기존 Django 화면과 충돌하지 않도록 범위를 제한합니다. */
+.mp-reviews { max-width: 940px; margin: 0 auto; padding: 32px 0 64px; }
+.mp-reviews * { box-sizing: border-box; }
+.mp-reviews__head { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:16px; margin-bottom:24px; }
+.mp-reviews__head h1 { margin:0; font-size:clamp(1.6rem,4vw,2.2rem); }
+.mp-reviews__head p { margin:7px 0 0; color:#685d57; }
+.mp-reviews__actions { display:flex; flex-wrap:wrap; align-items:center; gap:10px; }
+.mp-reviews__link { display:inline-block; padding:10px 14px; border-radius:9px; color:#a83c18; border:1px solid #f0cbbb; background:#fff; font-weight:700; }
+.mp-reviews__link:hover { background:#fff7f2; }
+.mp-reviews__primary { display:inline-block; padding:11px 18px; border:1px solid #f36f36; border-radius:9px; background:#ff7138; color:white; font-weight:700; cursor:pointer; font:inherit; }
+.mp-reviews__primary:hover { background:#e65f29; }
+.mp-reviews__list { display:grid; gap:18px; }
+.mp-review-card { padding:22px; background:#fff; border:1px solid #ffddca; border-radius:16px; box-shadow:0 5px 18px rgba(84,47,24,.04); min-width:0; }
+.mp-review-card__heading { display:flex; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:14px; }
+.mp-review-card__author { display:inline-flex; align-items:center; gap:9px; font-weight:800; min-width:0; overflow-wrap:anywhere; }
+.mp-review-card__author .member-avatar { width:42px; height:42px; }
+.mp-review-card__rating { font-weight:800; color:#ef6b35; }
+.mp-review-card__date { color:#76706b; font-size:.86rem; margin-left:auto; }
+.mp-review-card__body { display:flex; align-items:flex-start; gap:20px; }
+.mp-review-card__text { flex:1; min-width:0; }
+.mp-review-card__text p { margin:0 0 14px; line-height:1.7; overflow-wrap:anywhere; white-space:pre-wrap; }
+.mp-review-card__photo { display:block; width:min(260px,38%); max-height:240px; height:auto; border-radius:12px; object-fit:cover; flex-shrink:0; }
+.mp-review-card__buttons { display:flex; align-items:center; flex-wrap:wrap; gap:9px; margin-top:16px; padding-top:14px; border-top:1px solid #f1e6e0; }
+.mp-review-card__buttons form { margin:0; }
+.mp-review-card__secondary { padding:9px 13px; font:inherit; font-weight:700; color:#a63b17; background:#fff7f2; border:1px solid #f5cbb9; border-radius:9px; cursor:pointer; display:inline-block; }
+.mp-review-card__delete { padding:9px 13px; font:inherit; color:#9e2626; background:#fff; border:1px solid #edc9c9; border-radius:9px; cursor:pointer; }
+.mp-review-card__empty { padding:42px 20px; text-align:center; background:#fff7f2; border-radius:16px; color:#6a5e58; }
+@media (max-width:640px) {
+  .mp-reviews { padding:22px 0 45px; }
+  .mp-review-card { padding:16px; }
+  .mp-review-card__body { flex-direction:column-reverse; gap:14px; }
+  .mp-review-card__photo { width:100%; max-height:260px; }
+  .mp-review-card__date { width:100%; margin-left:0; }
+}
+</style>
+<section class="mp-reviews">
+    <div class="mp-reviews__head">
+        <div>
+            <h1>{{ restaurant.name }} 리뷰</h1>
+            <p>방문 경험을 공유하고 다른 이용자의 후기를 확인해 보세요.</p>
+        </div>
+        <div class="mp-reviews__actions">
+            <a class="mp-reviews__link" href="{% url 'webapp:restaurant_detail' restaurant_id %}?section=reviews#reviews">← 음식점 상세</a>
+            <a class="mp-reviews__primary" href="{% url 'webapp:review_create' restaurant_id %}">리뷰 작성하기</a>
+        </div>
+    </div>
+    <div class="mp-reviews__list">
+        {% for review in reviews %}
+            <article class="mp-review-card">
+                <div class="mp-review-card__heading">
+                    <a class="mp-review-card__author" href="{% url 'webapp:profile' review.author_id %}">
+                        {% include 'webapp/_avatar.html' with person=review.author %}
+                        <span>{{ review.author.member_profile.nickname|default:review.author.username }}</span>
+                    </a>
+                    <span class="mp-review-card__rating">★ {{ review.rating }}점</span>
+                    <time class="mp-review-card__date" datetime="{{ review.created_at|date:'c' }}">{{ review.created_at|date:'Y.m.d H:i' }}</time>
+                </div>
+                <div class="mp-review-card__body">
+                    <div class="mp-review-card__text"><p>{{ review.content }}</p></div>
+                    {% if review.photo %}<img class="mp-review-card__photo" src="{{ review.photo.url }}" alt="리뷰 첨부 사진" loading="lazy">{% endif %}
+                </div>
+                {% if user.pk == review.author_id %}
+                    <div class="mp-review-card__buttons">
+                        <a class="mp-review-card__secondary" href="{% url 'webapp:review_update' review.pk %}">수정</a>
+                        <form method="post" action="{% url 'webapp:review_delete' review.pk %}">
+                            {% csrf_token %}
+                            <button class="mp-review-card__delete" type="submit">삭제</button>
+                        </form>
+                    </div>
+                {% elif user.is_authenticated %}
+                    <div class="mp-review-card__buttons">
+                        <form method="post" action="{% url 'webapp:follow_toggle' review.author_id %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                            {% if review.follows_author %}
+                                <button class="mp-review-card__secondary" type="submit" name="action" value="unfollow" aria-pressed="true">♥ 언팔로우</button>
+                            {% else %}
+                                <button class="mp-review-card__secondary" type="submit" name="action" value="follow" aria-pressed="false">♡ 작성자 팔로우</button>
+                            {% endif %}
+                        </form>
+                    </div>
+                {% else %}
+                    <div class="mp-review-card__buttons">
+                        <a class="mp-review-card__secondary" href="{% url 'webapp:login' %}?next={{ request.get_full_path|urlencode }}">로그인하고 작성자 팔로우</a>
+                    </div>
+                {% endif %}
+            </article>
+        {% empty %}
+            <div class="mp-review-card__empty">아직 등록된 리뷰가 없어요. 첫 리뷰를 남겨보세요!</div>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}

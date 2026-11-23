@@ -1,0 +1,256 @@
+[
+  {
+    "model": "webapp.restaurant",
+    "pk": 1,
+    "fields": {
+      "name": "흥업 한끼",
+      "category": "korean",
+      "district": "흥업면",
+      "address": "원주시 흥업면 (시연용)",
+      "phone": "",
+      "image_url": "",
+      "description": "기능 확인을 위한 가상 음식점입니다."
+    }
+  },
+  {
+    "model": "webapp.menu",
+    "pk": 1,
+    "fields": {
+      "restaurant": 1,
+      "name": "비빔밥",
+      "price": 8500,
+      "image_url": ""
+    }
+  },
+  {
+    "model": "webapp.menu",
+    "pk": 2,
+    "fields": {
+      "restaurant": 1,
+      "name": "김치찌개",
+      "price": 9000,
+      "image_url": ""
+    }
+  },
+  {
+    "model": "webapp.restaurant",
+    "pk": 2,
+    "fields": {
+      "name": "단계 손맛",
+      "category": "korean",
+      "district": "단계동",
+      "address": "원주시 단계동 (시연용)",
+      "phone": "",
+      "image_url": "",
+      "description": "기능 확인을 위한 가상 음식점입니다."
+    }
+  },
+  {
+    "model": "webapp.menu",
+    "pk": 3,
+    "fields": {
+      "restaurant": 2,
+      "name": "비빔밥",
+      "price": 10000,
+      "image_url": ""
+    }
+  },
+  {
+    "model": "webapp.menu",
+    "pk": 4,
+    "fields": {
+      "restaurant": 2,
+      "name": "제육덮밥",
+      "price": 11000,
+      "image_url": ""
+    }
+  },
+  {
+    "model": "webapp.restaurant",
+    "pk": 3,
+    "fields": {
+      "name": "무실 홍반점",
+      "category": "chinese",
+      "district": "무실동",
+      "address": "원주시 무실동 (시연용)",
+      "phone": "",
+      "image_url": "",
+      "description": "기능 확인을 위한 가상 음식점입니다."
+    }
+  },
+  {
+    "model": "webapp.menu",
+    "pk": 5,
+    "fields": {
+      "restaurant": 3,
+      "name": "짜장면",
+      "price": 7500,
+      "image_url": ""
+    }
+  },
+  {
+    "model": "webapp.menu",
+    "pk": 6,
+    "fields": {
+      "restaurant": 3,
+      "name": "짬뽕",
+      "price": 9500,
+      "image_url": ""
+    }
+  },
+  {
+    "model": "webapp.restaurant",
+    "pk": 4,
+    "fields": {
+      "name": "흥업 라멘집",
+      "category": "japanese",
+      "district": "흥업면",
+      "address": "원주시 흥업면 (시연용)",
+      "phone": "",
+      "image_url": "",
+      "description": "기능 확인을 위한 가상 음식점입니다."
+    }
+  },
+  {
+    "model": "webapp.menu",
+    "pk": 7,
+    "fields": {
+      "restaurant": 4,
+      "name": "라멘",
+      "price": 11000,
+      "image_url": ""
+    }
+  },
+  {
+    "model": "webapp.menu",
+    "pk": 8,
+    "fields": {
+      "restaurant": 4,
+      "name": "돈가스",
+      "price": 15000,
+      "image_url": ""
+    }
+  },
+  {
+    "model": "webapp.menu",
+    "pk": 9,
+    "fields": {
+      "restaurant": 4,
+      "name": "미니우동",
+      "price": 7000,
+      "image_url": ""
+    }
+  },
+  {
+    "model": "webapp.restaurant",
+    "pk": 5,
+    "fields": {
+      "name": "단계 돈가스집",
+      "category": "japanese",
+      "district": "단계동",
+      "address": "원주시 단계동 (시연용)",
+      "phone": "",
+      "image_url": "",
+      "description": "기능 확인을 위한 가상 음식점입니다."
+    }
+  },
+  {
+    "model": "webapp.menu",
+    "pk": 10,
+    "fields": {
+      "restaurant": 5,
+      "name": "돈가스",
+      "price": 11500,
+      "image_url": ""
+    }
+  },
+  {
+    "model": "webapp.menu",
+    "pk": 11,
+    "fields": {
+      "restaurant": 5,
+      "name": "라멘",
+      "price": 12500,
+      "image_url": ""
+    }
+  },
+  {
+    "model": "webapp.restaurant",
+    "pk": 6,
+    "fields": {
+      "name": "반곡 파스타",
+      "category": "western",
+      "district": "반곡동",
+      "address": "원주시 반곡동 (시연용)",
+      "phone": "",
+      "image_url": "",
+      "description": "기능 확인을 위한 가상 음식점입니다."
+    }
+  },
+  {
+    "model": "webapp.menu",
+    "pk": 12,
+    "fields": {
+      "restaurant": 6,
+      "name": "토마토 파스타",
+      "price": 13500,
+      "image_url": ""
+    }
+  },
+  {
+    "model": "webapp.restaurant",
+    "pk": 7,
+    "fields": {
+      "name": "중앙 떡볶이",
+      "category": "snack",
+      "district": "중앙동",
+      "address": "원주시 중앙동 (시연용)",
+      "phone": "",
+      "image_url": "",
+      "description": "기능 확인을 위한 가상 음식점입니다."
+    }
+  },
+  {
+    "model": "webapp.menu",
+    "pk": 13,
+    "fields": {
+      "restaurant": 7,
+      "name": "떡볶이",
+      "price": 4500,
+      "image_url": ""
+    }
+  },
+  {
+    "model": "webapp.menu",
+    "pk": 14,
+    "fields": {
+      "restaurant": 7,
+      "name": "김밥",
+      "price": 3500,
+      "image_url": ""
+    }
+  },
+  {
+    "model": "webapp.restaurant",
+    "pk": 8,
+    "fields": {
+      "name": "무실 카레집",
+      "category": "other",
+      "district": "무실동",
+      "address": "원주시 무실동 (시연용)",
+      "phone": "",
+      "image_url": "",
+      "description": "기능 확인을 위한 가상 음식점입니다."
+    }
+  },
+  {
+    "model": "webapp.menu",
+    "pk": 15,
+    "fields": {
+      "restaurant": 8,
+      "name": "카레 덮밥",
+      "price": 10500,
+      "image_url": ""
+    }
+  }
+]

@@ -1,0 +1,41 @@
+{% load static %}
+<!doctype html>
+<html lang="ko">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}원주맛픽{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a class="site-logo" href="{% url 'webapp:home' %}">원주맛픽</a>
+            <nav class="site-nav" aria-label="주요 메뉴">
+                <a href="{% url 'webapp:home' %}">홈</a>
+                <a href="{% url 'webapp:restaurant_list' %}">맛집 찾기</a>
+                <a href="{% url 'webapp:roulette' %}">추천 룰렛</a>
+                {% if user.is_staff %}<a href="{% url 'admin:webapp_restaurant_changelist' %}">음식점 관리</a>{% endif %}
+                {% if user.is_authenticated %}
+                    <a href="{% url 'webapp:favorite_list' %}">관심 맛집</a>
+                    <a href="{% url 'webapp:profile' user.pk %}">내 프로필</a>
+                    <form method="post" action="{% url 'webapp:logout' %}">
+                        {% csrf_token %}
+                        <button type="submit">로그아웃</button>
+                    </form>
+                {% else %}
+                    <a href="{% url 'webapp:login' %}">로그인</a>
+                    <a href="{% url 'webapp:signup' %}">회원가입</a>
+                {% endif %}
+            </nav>
+        </div>
+    </header>
+    <main class="container">
+        {% for message in messages %}<p role="status">{{ message }}</p>{% endfor %}
+        {% block content %}{% endblock %}
+    </main>
+    <footer class="site-footer">
+        <div class="container">원주맛픽 · 웹프로그래밍 팀 프로젝트</div>
+    </footer>
+</body>
+</html>

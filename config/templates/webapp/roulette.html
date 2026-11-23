@@ -1,0 +1,88 @@
+{% extends "webapp/base.html" %}
+{% block title %}추천 룰렛 | 원주맛픽{% endblock %}
+{% block content %}
+<style>
+  .wm-roulette { max-width: 980px; margin: 0 auto; padding: 34px 0 66px; }
+  .wm-roulette-head { text-align: center; margin-bottom: 25px; }
+  .wm-roulette-head h1 { margin: 0 0 10px; font-size: clamp(2rem, 4vw, 2.6rem); }
+  .wm-roulette-head p { margin: 0; color: #77635a; }
+  .wm-roulette-panel { padding: clamp(20px, 4vw, 38px); background: #fff8f4; border: 1px solid #ffd7c5; border-radius: 24px; }
+  .wm-category-list { display: flex; justify-content: center; flex-wrap: wrap; gap: 9px; padding: 0; margin: 0 0 25px; list-style: none; }
+  .wm-category-list li { padding: 8px 16px; background: #fff; border: 1px solid #ffdbca; color: #8f3e22; border-radius: 999px; }
+  .wm-roulette .wheel-frame { position: relative; width: min(280px, 100%); margin: 28px auto; }
+  .wm-roulette #wheel { width: 100%; height: auto; aspect-ratio: 1; box-shadow: 0 8px 25px rgba(105, 48, 20, .15); }
+  .wm-roulette .wheel-pointer { top: -13px; }
+  .wm-roulette-actions { display: flex; justify-content: center; padding: 6px 0 0; }
+  .wm-roulette-actions .button { background: #ff7138; border-color: #ff7138; font-size: 1.05rem; padding: 12px 32px; border-radius: 11px; }
+  .wm-roulette-actions .button:hover { background: #ec5e27; }
+  .wm-result { margin-top: 25px; padding: clamp(20px, 4vw, 32px); background: white; border: 1px solid #ffd7c5; border-radius: 20px; }
+  .wm-result-label { color: #a34624; font-weight: 700; margin: 0 0 7px; }
+  .wm-result h2 { margin: 0 0 17px; font-size: clamp(1.6rem, 4vw, 2.1rem); }
+  .wm-result-photo { display: block; width: min(100%, 320px); height: 230px; max-width: 100%; object-fit: cover; border-radius: 14px; margin: 0 0 26px; }
+  .wm-result h3 { margin: 14px 0; font-size: 1.23rem; }
+  .wm-sellers { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr)); gap: 12px; list-style: none; padding: 0; margin: 0; }
+  .wm-sellers a { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; border: 1px solid #f1ddd1; border-radius: 13px; padding: 16px; text-decoration: none; height: 100%; }
+  .wm-sellers a:hover, .wm-sellers a:focus-visible { border-color: #ff7138; background: #fff8f4; }
+  .wm-sellers strong { font-size: 1.06rem; }
+  .wm-sellers span { color: #785c4e; font-size: .9rem; }
+  .wm-roulette-empty { color: #785c4e; }
+  @media (max-width: 560px) {
+    .wm-roulette { padding-top: 20px; }
+    .wm-roulette-panel { border-radius: 18px; }
+    .wm-category-list li { font-size: .9rem; padding: 6px 11px; }
+  }
+</style>
+<section class="wm-roulette roulette-page" aria-labelledby="roulette-title">
+  <header class="wm-roulette-head">
+    <h1 id="roulette-title">{% if drawn %}오늘의 메뉴 추천 결과{% else %}오늘 뭐 먹지?{% endif %}</h1>
+    <p>등록된 맛집 메뉴 중에서 오늘 먹을 음식을 골라보세요.</p>
+  </header>
+  <div class="wm-roulette-panel">
+    <ul class="wm-category-list" aria-label="음식 카테고리">
+      {% for value, label in categories %}
+        <li>{{ label }}</li>
+      {% endfor %}
+    </ul>
+    <div class="wheel-frame" aria-hidden="true">
+      <span class="wheel-pointer"></span>
+      <div id="wheel"{% if drawn and sellers %} class="spinning" style="--wheel-angle: {{ wheel_angle }}deg"{% endif %}>
+        {% for value, label in categories %}<span>{{ label }}</span>{% endfor %}
+      </div>
+    </div>
+    <div class="wm-roulette-actions">
+      {% if drawn %}
+        <a class="button" href="{% url 'webapp:roulette' %}">다시 돌리기</a>
+      {% else %}
+        <form method="post" action="{% url 'webapp:roulette' %}">
+          {% csrf_token %}
+          <button class="button" type="submit">룰렛 돌리기</button>
+        </form>
+      {% endif %}
+    </div>
+  </div>
+  {% if drawn %}
+    <section class="wm-result draw-result{% if sellers %} reveal{% endif %}" aria-label="룰렛 결과" aria-live="polite">
+      {% if sellers %}
+        <p class="wm-result-label">오늘의 추천 · {{ selected_category }}</p>
+        <h2>{{ selected_menu }}</h2>
+        {% if menu_image_url %}
+          <img class="wm-result-photo" src="{{ menu_image_url }}" alt="{{ selected_menu }} 사진" loading="lazy">
+        {% endif %}
+        <h3>이 메뉴를 파는 맛집</h3>
+        <ul class="wm-sellers">
+          {% for menu in sellers %}
+            <li>
+              <a href="{% url 'webapp:restaurant_detail' menu.restaurant_id %}">
+                <strong>{{ menu.restaurant.name }}</strong>
+                <span>{{ menu.restaurant.district }} · {{ menu.price }}원</span>
+              </a>
+            </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p class="wm-roulette-empty">지금 추천할 메뉴가 없어요. 음식점과 메뉴를 등록한 뒤 다시 시도해 주세요.</p>
+      {% endif %}
+    </section>
+  {% endif %}
+</section>
+{% endblock %}

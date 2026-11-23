@@ -1,0 +1,76 @@
+{% extends "webapp/base.html" %}
+{% load static %}
+{% block title %}{{ restaurant.name }} | 원주맛픽{% endblock %}
+{% block content %}
+<link rel="stylesheet" href="{% static 'webapp/css/matpick_integrated.css' %}">
+<article class="mp-explore">
+  <header class="mp-pagebar">
+    <a class="mp-back" href="{% url 'webapp:restaurant_list' %}" aria-label="맛집 목록으로 돌아가기">&#8592;</a>
+    <span class="mp-meta">{{ restaurant.get_category_display }} · {{ restaurant.district }}</span>
+  </header>
+
+  <div class="mp-detail-hero">
+    {% if restaurant.image_url %}<img src="{{ restaurant.image_url }}" alt="{{ restaurant.name }} 대표 사진">
+    {% else %}<span aria-hidden="true">🍽️</span>{% endif %}
+  </div>
+  <section class="mp-detail-head" aria-label="음식점 정보">
+    <div>
+      <h1>{{ restaurant.name }}</h1>
+      {% if review_count %}<p class="mp-rating">★ {{ average_rating|floatformat:1 }}점 <span class="mp-meta">(리뷰 {{ review_count }}개)</span></p>
+      {% else %}<p class="mp-meta">아직 등록된 리뷰가 없어요.</p>{% endif %}
+      <p class="mp-meta">{{ restaurant.address }}</p>
+      {% if restaurant.phone %}<p class="mp-meta">전화 {{ restaurant.phone }}</p>{% endif %}
+      {% if restaurant.description %}<p class="mp-meta">{{ restaurant.description }}</p>{% endif %}
+    </div>
+    {% if user.is_authenticated %}
+      <form class="mp-heart-form" method="post" action="{% url 'webapp:set_favorite' restaurant.pk %}">
+        {% csrf_token %}
+        {% if is_favorite %}
+          <button type="submit" class="mp-heart on" name="action" value="remove" aria-pressed="true" aria-label="관심 맛집 해제">♥</button>
+        {% else %}
+          <button type="submit" class="mp-heart" name="action" value="add" aria-pressed="false" aria-label="관심 맛집 등록">♡</button>
+        {% endif %}
+      </form>
+    {% else %}
+      <a class="mp-heart" href="{% url 'webapp:login' %}?next={{ request.path|urlencode }}" aria-label="로그인하여 관심 맛집 등록" style="display:grid;place-items:center;text-decoration:none;">♡</a>
+    {% endif %}
+  </section>
+
+  <nav class="mp-tabs" aria-label="음식점 메뉴와 리뷰">
+    <a href="?section=menu#menu" class="{% if active_section == 'menu' %}active{% endif %}" {% if active_section == 'menu' %}aria-current="page"{% endif %}>메뉴</a>
+    <a href="?section=reviews#reviews" class="{% if active_section == 'reviews' %}active{% endif %}" {% if active_section == 'reviews' %}aria-current="page"{% endif %}>리뷰 ({{ review_count }})</a>
+  </nav>
+
+  <section id="menu" class="mp-detail-section" aria-labelledby="mp-menu-title" {% if active_section != 'menu' %}hidden{% endif %}>
+    <h2 id="mp-menu-title">메뉴</h2>
+    <ul class="mp-menu-list">
+      {% for menu in menus %}
+        <li class="mp-menu-item">
+          <span class="mp-menu-photo">
+            {% if menu.image_url %}<img src="{{ menu.image_url }}" alt="{{ menu.name }} 사진" loading="lazy">
+            {% else %}<span aria-hidden="true">🍽️</span>{% endif %}
+          </span>
+          <span class="mp-menu-info"><strong>{{ menu.name }}</strong><span class="mp-menu-price">{{ menu.price }}원</span></span>
+        </li>
+      {% empty %}<li class="mp-empty">등록된 메뉴가 없어요.</li>{% endfor %}
+    </ul>
+  </section>
+
+  <section id="reviews" class="mp-detail-section" aria-labelledby="mp-reviews-title" {% if active_section != 'reviews' %}hidden{% endif %}>
+    <h2 id="mp-reviews-title">리뷰</h2>
+    {% if review_count %}<p class="mp-meta">평균 {{ average_rating|floatformat:1 }}점 · 리뷰 {{ review_count }}개</p>
+    {% else %}<p class="mp-empty">등록된 리뷰가 없어요.</p>{% endif %}
+    {% for review in reviews %}
+      <article class="mp-review">
+        <h3><a href="{% url 'webapp:profile' review.author_id %}">{{ review.author.member_profile.nickname|default:review.author.username }}</a> · ★ {{ review.rating }}점</h3>
+        <p>{{ review.content }}</p>
+        {% if review.photo %}<img src="{{ review.photo.url }}" alt="리뷰 사진" loading="lazy">{% endif %}
+      </article>
+    {% endfor %}
+    <div class="mp-actions">
+      <a href="{% url 'webapp:review_list' restaurant.pk %}">리뷰 전체 보기</a>
+      <a href="{% url 'webapp:review_create' restaurant.pk %}">리뷰 작성하기</a>
+    </div>
+  </section>
+</article>
+{% endblock %}

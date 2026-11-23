@@ -1,0 +1,18 @@
+{% extends "webapp/base.html" %}
+{% block title %}관심 맛집 | 원주맛픽{% endblock %}
+{% block content %}
+<section class="page">
+    <h1>관심 맛집</h1>
+    <ul class="results">
+        {% for restaurant in restaurants %}
+            <li><a class="result-card" href="{% url 'webapp:restaurant_detail' restaurant.pk %}">
+                <strong>{{ restaurant.name }}</strong>
+                <span>{{ restaurant.get_category_display }} · {{ restaurant.district }}</span>
+            </a></li>
+        {% empty %}
+            <li>등록한 관심 맛집이 없어요.</li>
+        {% endfor %}
+    </ul>
+    <a class="back-link" href="{% url 'webapp:restaurant_list' %}">맛집 찾아보기</a>
+</section>
+{% endblock %}

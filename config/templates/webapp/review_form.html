@@ -1,0 +1,51 @@
+{% extends 'webapp/base.html' %}
+{% block title %}{{ title }} | 원주맛픽{% endblock %}
+{% block content %}
+<style>
+  /* 리뷰 작성·수정 페이지 전용 스타일: 다른 Django 화면에는 영향을 주지 않습니다. */
+  .wm-review-editor { max-width: 740px; margin: 36px auto 68px; }
+  .wm-review-editor .wm-back { display: inline-block; margin-bottom: 18px; color: #aa431b; text-decoration: none; }
+  .wm-review-editor .wm-panel { padding: clamp(22px, 4vw, 38px); background: #fff8f3; border: 1px solid #ffdec8; border-radius: 20px; }
+  .wm-review-editor h1 { margin: 0 0 8px; font-size: clamp(1.7rem, 4vw, 2.25rem); }
+  .wm-review-editor .wm-intro { margin: 0 0 28px; color: #6d5a50; }
+  .wm-review-editor .wm-field { margin: 0 0 24px; }
+  .wm-review-editor .wm-field > label { display: block; margin-bottom: 9px; font-weight: 700; }
+  .wm-review-editor textarea,
+  .wm-review-editor input[type="file"],
+  .wm-review-editor input[type="text"] { width: 100%; border: 1px solid #d9c3b5; background: #fff; border-radius: 10px; padding: 12px; font: inherit; }
+  .wm-review-editor textarea { min-height: 150px; resize: vertical; }
+  .wm-review-editor .wm-field [id="id_rating"] { display: flex; flex-wrap: wrap; gap: 12px 20px; }
+  .wm-review-editor .wm-field [id="id_rating"] label { display: inline-flex; align-items: center; gap: 5px; cursor: pointer; font-weight: 500; }
+  .wm-review-editor .wm-field input[type="radio"] { accent-color: #ff7138; width: auto; }
+  .wm-review-editor .helptext { display: block; margin-top: 8px; font-size: .9rem; color: #75665e; }
+  .wm-review-editor .errorlist { margin: 8px 0; color: #a11e1e; }
+  .wm-review-editor .wm-actions { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+  .wm-review-editor .wm-save { background: #ff7138; color: #fff; border: 0; border-radius: 10px; padding: 13px 24px; font: inherit; font-weight: 700; cursor: pointer; }
+  .wm-review-editor .wm-cancel { display: inline-block; padding: 12px 18px; border: 1px solid #ffb695; border-radius: 10px; color: #ad431c; text-decoration: none; background: #fff; }
+  .wm-review-editor :is(button, input, textarea, a):focus-visible { outline: 2px solid #c85e2a; outline-offset: 3px; }
+  @media (max-width: 560px) { .wm-review-editor { margin-top: 18px; } .wm-review-editor .wm-actions > * { flex: 1; text-align: center; } }
+</style>
+<section class="wm-review-editor">
+  <a class="wm-back" href="{% url 'webapp:review_list' restaurant_id %}">← 리뷰 목록으로</a>
+  <div class="wm-panel">
+    <h1>{{ title }}</h1>
+    <p class="wm-intro">별점과 후기를 남겨주세요. 사진은 선택 사항이에요.</p>
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      {{ form.non_field_errors }}
+      {% for field in form %}
+        <div class="wm-field">
+          {{ field.label_tag }}
+          {{ field }}
+          {% if field.help_text %}<span class="helptext">{{ field.help_text }}</span>{% endif %}
+          {{ field.errors }}
+        </div>
+      {% endfor %}
+      <div class="wm-actions">
+        <button class="wm-save" type="submit">저장하기</button>
+        <a class="wm-cancel" href="{% url 'webapp:review_list' restaurant_id %}">취소</a>
+      </div>
+    </form>
+  </div>
+</section>
+{% endblock %}

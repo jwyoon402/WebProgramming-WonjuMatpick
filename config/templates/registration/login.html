@@ -1,0 +1,46 @@
+{% extends 'webapp/base.html' %}
+{% block title %}로그인 | 원주맛픽{% endblock %}
+{% block content %}
+<style>
+/* 프론트엔드 2의 밝은 카드/주황색 버튼 분위기를 Django 인증 폼에 적용합니다.
+   다른 화면의 nav, body, .page에는 영향을 주지 않도록 전부 범위를 제한합니다. */
+.wm-login { width: min(100%, 480px); margin: clamp(28px, 6vw, 70px) auto; }
+.wm-login__card { background: #fff8f3; border: 1px solid #ffe1cb; border-radius: 16px; padding: clamp(22px, 5vw, 36px); box-shadow: 0 12px 36px rgba(70, 35, 20, 0.06); }
+.wm-login__title { margin: 0 0 8px; font-size: clamp(1.7rem, 4vw, 2.2rem); color: #222; }
+.wm-login__intro { color: #625b56; margin: 0 0 26px; }
+.wm-login__field { margin-bottom: 18px; }
+.wm-login__field label { display: block; margin-bottom: 7px; font-weight: 700; color: #333; }
+.wm-login__field input { display: block; width: 100%; min-height: 48px; padding: 11px 13px; border: 1px solid #c8bbb5; border-radius: 9px; background: #fff; color: #222; font: inherit; }
+.wm-login__field input:focus { outline: 2px solid #f67b44; outline-offset: 1px; border-color: #f67b44; }
+.wm-login__error { color: #a02512; background: #fff0ed; border: 1px solid #f8c2b5; padding: 10px 12px; border-radius: 8px; margin: 0 0 18px; }
+.wm-login__error ul { margin: 0; padding-left: 18px; }
+.wm-login__button { display: block; width: 100%; padding: 13px 18px; background: #ff7138; color: white; border: 0; border-radius: 10px; font: inherit; font-weight: 700; cursor: pointer; }
+.wm-login__button:hover { background: #dd5725; }
+.wm-login__foot { text-align: center; margin: 20px 0 0; color: #625b56; }
+.wm-login__foot a { color: #b64018; font-weight: 700; text-decoration: underline; text-underline-offset: 3px; }
+@media (max-width: 520px) { .wm-login { margin: 24px auto; } }
+</style>
+<section class="wm-login" aria-labelledby="wm-login-title">
+  <div class="wm-login__card">
+    <h1 class="wm-login__title" id="wm-login-title">로그인</h1>
+    <p class="wm-login__intro">원주맛픽에 로그인하고 맛집과 리뷰를 둘러보세요.</p>
+    <form method="post" action="{% url 'webapp:login' %}">
+      {% csrf_token %}
+      {% if form.non_field_errors %}<div class="wm-login__error" role="alert">{{ form.non_field_errors }}</div>{% endif %}
+      <div class="wm-login__field">
+        <label for="{{ form.username.id_for_label }}">아이디</label>
+        {{ form.username }}
+        {% if form.username.errors %}<div class="wm-login__error" role="alert">{{ form.username.errors }}</div>{% endif %}
+      </div>
+      <div class="wm-login__field">
+        <label for="{{ form.password.id_for_label }}">비밀번호</label>
+        {{ form.password }}
+        {% if form.password.errors %}<div class="wm-login__error" role="alert">{{ form.password.errors }}</div>{% endif %}
+      </div>
+      {% if next %}<input type="hidden" name="next" value="{{ next }}">{% endif %}
+      <button class="wm-login__button" type="submit">로그인</button>
+    </form>
+    <p class="wm-login__foot">계정이 없으신가요? <a href="{% url 'webapp:signup' %}{% if next %}?next={{ next|urlencode }}{% endif %}">회원가입</a></p>
+  </div>
+</section>
+{% endblock %}
