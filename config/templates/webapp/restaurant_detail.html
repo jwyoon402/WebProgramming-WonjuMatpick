@@ -3,6 +3,7 @@
 {% block title %}{{ restaurant.name }} | 원주맛픽{% endblock %}
 {% block content %}
 <link rel="stylesheet" href="{% static 'webapp/css/matpick_integrated.css' %}">
+{# [상세 화면] 뷰에서 가져온 음식점·메뉴·평균 별점·최근 리뷰를 표시합니다. #}
 <article class="mp-explore">
   <header class="mp-pagebar">
     <a class="mp-back" href="{% url 'webapp:restaurant_list' %}" aria-label="맛집 목록으로 돌아가기">&#8592;</a>
@@ -23,6 +24,7 @@
       {% if restaurant.description %}<p class="mp-meta">{{ restaurant.description }}</p>{% endif %}
     </div>
     {% if user.is_authenticated %}
+{# 관심 맛집 추가/해제는 로그인한 사용자의 POST와 CSRF 토큰으로 요청합니다. #}
       <form class="mp-heart-form" method="post" action="{% url 'webapp:set_favorite' restaurant.pk %}">
         {% csrf_token %}
         {% if is_favorite %}
@@ -36,6 +38,7 @@
     {% endif %}
   </section>
 
+{# 메뉴/리뷰 탭은 GET의 section 값으로 선택되며 DB 내용은 매 요청 다시 조회합니다. #}
   <nav class="mp-tabs" aria-label="음식점 메뉴와 리뷰">
     <a href="?section=menu#menu" class="{% if active_section == 'menu' %}active{% endif %}" {% if active_section == 'menu' %}aria-current="page"{% endif %}>메뉴</a>
     <a href="?section=reviews#reviews" class="{% if active_section == 'reviews' %}active{% endif %}" {% if active_section == 'reviews' %}aria-current="page"{% endif %}>리뷰 ({{ review_count }})</a>

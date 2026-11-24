@@ -1,5 +1,7 @@
 {% extends 'webapp/base.html' %}
 {% block title %}{{ title }} | 원주맛픽{% endblock %}
+{# [리뷰 폼] 생성/수정이 같은 ModelForm을 사용하며 실제 작성자 권한은 뷰에서 검증합니다. #}
+{# 이미지 첨부에는 multipart 요청을 사용하고 모든 저장 POST에는 CSRF 토큰을 보냅니다. #}
 {% block content %}
 <style>
   /* 리뷰 작성·수정 페이지 전용 스타일: 다른 Django 화면에는 영향을 주지 않습니다. */

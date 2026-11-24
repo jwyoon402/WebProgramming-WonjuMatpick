@@ -4,6 +4,8 @@ from django.db import models
 from django.db.models import F, Q
 
 
+# [ORM 데이터 구조] 음식점을 중심으로 메뉴·리뷰·관심 맛집이 외래 키로 연결됩니다.
+# 음식점 정보를 검색하고 관련 메뉴·평점을 조회하는 데 사용합니다.
 class Restaurant(models.Model):
     # DB에는 검색과 룰렛에 공통으로 쓰는 영문 값을 저장하고 화면에는 한국어 이름을 표시합니다.
     class Category(models.TextChoices):
@@ -115,6 +117,7 @@ class Follow(models.Model):
         return f"{self.follower} follows {self.following}"
 
 
+# [관심 맛집] 사용자와 음식점의 관계를 기록하고 동일 조합의 중복 저장을 제한합니다.
 class Favorite(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="favorites")
     restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE, related_name="favorites")
@@ -126,6 +129,7 @@ class Favorite(models.Model):
         ]
 
 
+# [로그인 보안] 해시 키와 시간 구간을 묶어 로그인 POST 시도 횟수를 DB에 기록합니다.
 class LoginAttemptWindow(models.Model):
     # 로그인 경로와 접속 주소에서 만든 해시와 5분 구간의 시작 시각이 하나의 집계 행을 식별합니다.
     key = models.CharField(max_length=64)

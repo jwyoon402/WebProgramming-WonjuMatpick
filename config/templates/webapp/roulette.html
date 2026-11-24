@@ -32,6 +32,7 @@
     .wm-category-list li { font-size: .9rem; padding: 6px 11px; }
   }
 </style>
+{# [룰렛] 추첨은 JavaScript가 아닌 Django 뷰에서 등록된 메뉴 데이터를 기준으로 실행합니다. #}
 <section class="wm-roulette roulette-page" aria-labelledby="roulette-title">
   <header class="wm-roulette-head">
     <h1 id="roulette-title">{% if drawn %}오늘의 메뉴 추천 결과{% else %}오늘 뭐 먹지?{% endif %}</h1>
@@ -43,12 +44,14 @@
         <li>{{ label }}</li>
       {% endfor %}
     </ul>
+{# wheel_angle은 서버가 선택한 카테고리를 바늘에 맞추도록 계산한 회전 각도입니다. #}
     <div class="wheel-frame" aria-hidden="true">
       <span class="wheel-pointer"></span>
       <div id="wheel"{% if drawn and sellers %} class="spinning" style="--wheel-angle: {{ wheel_angle }}deg"{% endif %}>
         {% for value, label in categories %}<span>{{ label }}</span>{% endfor %}
       </div>
     </div>
+{# 새 추첨은 POST+CSRF로 실행하고 결과 페이지는 GET으로 표시합니다. #}
     <div class="wm-roulette-actions">
       {% if drawn %}
         <a class="button" href="{% url 'webapp:roulette' %}">다시 돌리기</a>

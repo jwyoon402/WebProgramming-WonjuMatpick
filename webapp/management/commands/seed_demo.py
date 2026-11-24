@@ -16,6 +16,7 @@ class Command(BaseCommand):
     def add_arguments(self, parser):
         parser.add_argument("--base-url", default="http://127.0.0.1:8000")
 
+    # DB 적재 도중 예외가 발생하면 한 트랜잭션의 변경을 함께 취소합니다.
     @transaction.atomic
     def handle(self, *args, **options):
         base_url = options["base_url"].rstrip("/")
@@ -24,12 +25,14 @@ class Command(BaseCommand):
             raise CommandError("--base-url에는 http://127.0.0.1:8000처럼 사이트 주소만 입력하세요.")
 
         # 기존 음식점이 있을 때 fixture의 고정 PK로 데이터를 덮어쓰지 않습니다.
+        # 기존 식당 PK 충돌을 피하도록 식당이 없는 초기 DB에서만 fixture를 불러옵니다.
         if not Restaurant.objects.exists():
             call_command("loaddata", "demo_restaurants", verbosity=0, stdout=self.stdout)
         demo_places = Restaurant.objects.filter(address__endswith=" (시연용)")
         if not demo_places.exists():
             raise CommandError("시연용 음식점이 없습니다. 빈 시연 DB에서 실행해 주세요.")
 
+        # 정적 시연 이미지 URL을 빈 음식점·메뉴 이미지 필드에만 채웁니다.
         static_url = f"{base_url}/static/demo"
         for restaurant in demo_places:
             updated_fields = []
@@ -47,6 +50,7 @@ class Command(BaseCommand):
 
         user_model = get_user_model()
         reviewers = []
+        # 공개 예시 계정은 사용 가능한 비밀번호를 설정하지 않아 로그인 용도로 쓰지 않습니다.
         for username, nickname in (("matpick_demo_lunch", "원주점심"), ("matpick_demo_menu", "메뉴기록")):
             email = f"{username}@example.invalid"
             member = user_model.objects.filter(username=username).first()
@@ -59,6 +63,7 @@ class Command(BaseCommand):
 
         # 로그인 가능한 공용 비밀번호 없이 샘플 프로필과 리뷰를 열어 볼 수 있게 합니다.
         Follow.objects.get_or_create(follower=reviewers[0], following=reviewers[1])
+        # 각 식당에 시연 리뷰/이미지를 연결하되 이미 있는 동일 리뷰는 중복 생성하지 않습니다.
         for index, restaurant in enumerate(demo_places):
             author = reviewers[index % len(reviewers)]
             content = "메뉴 가격과 음식점 정보를 확인할 수 있어 편했어요. (발표 시연용 가상 리뷰)"
