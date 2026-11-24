@@ -10,6 +10,8 @@ class MenuInline(admin.TabularInline):
     extra = 1
 
 
+# [관리자 CRUD] Django Admin의 접근 권한과 모델 검증을 사용합니다.
+# MenuInline으로 식당 편집 화면에서 연결 메뉴도 함께 관리합니다.
 @admin.register(Restaurant)
 class RestaurantAdmin(admin.ModelAdmin):
     # 관리자 목록에서 음식점을 조회하고, 메뉴 이름이나 주소로 찾은 뒤 수정·삭제할 수 있습니다.

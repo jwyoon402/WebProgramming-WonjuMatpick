@@ -44,6 +44,7 @@ def home(request):
 
 
 @require_GET
+    # [데이터 흐름] GET 검색값 → Form 검증 → ORM 필터 → 12개씩 페이지 분할 → 템플릿 전달.
 def restaurant_list(request):
     form = RestaurantSearchForm(request.GET)
     restaurants = Restaurant.objects.none().order_by("name", "pk")
@@ -136,6 +137,7 @@ def favorite_list(request):
 
 
 @require_http_methods(["GET", "HEAD", "POST"])
+    # [데이터 흐름] POST에서 DB 메뉴를 추첨하고 세션에 저장한 뒤 결과 GET으로 이동합니다.
 def roulette(request):
     if request.method == "POST":
         # (카테고리, 메뉴명) 중복을 제거해 같은 이름의 메뉴를 파는 가게가
@@ -255,6 +257,7 @@ def review_list(request, restaurant_id):
     })
 
 @login_required
+    # [작성자 보호] 리뷰의 작성자는 세션, 식당은 URL의 PK로 결정하며 폼에서 받지 않습니다.
 def review_create(request, restaurant_id):
     restaurant = get_object_or_404(Restaurant, pk=restaurant_id)
     # 리뷰 폼은 본문과 별점, 선택적으로 첨부된 사진을 함께 검증합니다.
@@ -271,6 +274,7 @@ def review_create(request, restaurant_id):
     return render(request, "webapp/review_form.html", {"form": form, "restaurant_id": restaurant_id, "title": "리뷰 작성"})
 
 @login_required
+    # [수정 권한] DB의 리뷰 작성자와 현재 로그인 사용자 PK가 같은지 먼저 확인합니다.
 def review_update(request, review_id):
     review = get_object_or_404(Review, pk=review_id)
     # 기존 데이터를 폼에 채우거나 변경 사항을 받기 전에 로그인 사용자와 원래 작성자의 PK를 비교합니다.

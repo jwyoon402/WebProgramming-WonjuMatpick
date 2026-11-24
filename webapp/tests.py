@@ -16,6 +16,7 @@ from .middleware import LoginRateLimitMiddleware, MultipartSizeLimitMiddleware
 from .models import Favorite, Follow, MemberProfile, Menu, Restaurant, Review
 
 
+# [테스트] 홈 응답을 검사해 기본 URL·템플릿 연결이 유지되는지 확인합니다.
 class HomePageTests(TestCase):
     def test_home_page_loads(self):
         response = self.client.get(reverse("webapp:home"))
@@ -23,6 +24,8 @@ class HomePageTests(TestCase):
         self.assertContains(response, "원주맛픽")
 
 
+# [테스트] 검색·가격·평점 필터, 상세 조회, 관리자 CRUD와 DB 룰렛을 검증합니다.
+# 서로 다른 메뉴 행의 이름·가격을 잘못 결합해 검색되지 않도록 하는 사례도 검사합니다.
 class RestaurantFeatureTests(TestCase):
     @classmethod
     def setUpTestData(cls):
@@ -83,6 +86,7 @@ class RestaurantFeatureTests(TestCase):
         self.assertContains(self.client.post(url, follow=True), "지금 추천할 메뉴가 없어요.")
         self.assertEqual(Client(enforce_csrf_checks=True).post(url).status_code, 403)
 
+    # 관리자 수정 결과가 실제 공개 음식점 조회에도 반영되는지 확인합니다.
     def test_admin_crud_updates_public_results(self):
         admin_add = reverse("admin:webapp_restaurant_add")
         payload = {
@@ -151,6 +155,7 @@ class RestaurantFeatureTests(TestCase):
 User = get_user_model()
 
 
+# [테스트] 가입·로그인·리뷰 작성자 권한·팔로우 관계와 화면 연결을 검증합니다.
 class UserFeatureTests(TestCase):
     def setUp(self):
         self.restaurant = Restaurant.objects.create(name="테스트 식당", category=Restaurant.Category.KOREAN,
@@ -311,6 +316,7 @@ class UserFeatureTests(TestCase):
         self.assertFalse(Follow.objects.exists())
         self.assertContains(self.client.get(profile), f'{reverse("webapp:restaurant_detail", args=[self.restaurant.pk])}?section=reviews#reviews')
 
+    # 사진 교체·삭제 시 미사용 파일 정리 및 DB 롤백 시 파일 보존 동작을 확인합니다.
     def test_review_photo_cleanup_on_replace_delete_and_rollback(self):
         author = User.objects.create_user(username="photo-author")
         self.client.force_login(author)
@@ -346,6 +352,7 @@ class UserFeatureTests(TestCase):
             self.assertFalse(storage.exists(current))
 
 
+# [테스트] 시연 데이터 생성 명령의 이미지 연결과 중복 생성 방지를 검증합니다.
 class SeedDemoTests(TestCase):
     def test_seed_demo_loads_images_and_reviews_without_duplicates(self):
         with TemporaryDirectory() as media, self.settings(MEDIA_ROOT=media):
@@ -359,6 +366,7 @@ class SeedDemoTests(TestCase):
                 self.assertTrue(review.photo.storage.exists(review.photo.name))
 
 
+# [보안 테스트] 로그인 시도 횟수 제한과 사진 업로드 크기·형식·메타데이터 검증을 확인합니다.
 class SecurityRegressionTests(TestCase):
     def test_login_limits_apply_separately_and_reset_after_window(self):
         service = reverse("webapp:login")

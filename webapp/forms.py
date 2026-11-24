@@ -37,6 +37,7 @@ class RestaurantSearchForm(forms.Form):
     )
 
 
+# [회원가입] Django UserCreationForm의 비밀번호 검증을 재사용하고 공개 닉네임을 별도로 저장합니다.
 class SignupForm(UserCreationForm):
     email = forms.EmailField(label="이메일", required=True)
     nickname = forms.CharField(label="닉네임", max_length=30)
@@ -61,6 +62,8 @@ class SignupForm(UserCreationForm):
             MemberProfile.objects.create(user=user, nickname=self.cleaned_data["nickname"])
         return user
 
+# [사진 검증] 업로드 크기 → 이미지 내용/해상도 → 안전한 형식으로 재인코딩 순서로 처리합니다.
+# 원본 파일의 메타데이터를 그대로 신뢰하거나 저장하지 않습니다.
 class ReviewPhotoField(forms.FileField):
     # 사용자가 올린 파일과 변환 후 파일은 각각 최대 5 MiB까지 허용합니다.
     MAX_BYTES = 5 * 1024 * 1024

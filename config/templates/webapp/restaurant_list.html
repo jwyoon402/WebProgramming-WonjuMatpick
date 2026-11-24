@@ -2,6 +2,7 @@
 {% load static %}
 {% block title %}맛집 찾기 | 원주맛픽{% endblock %}
 {% block content %}
+{# [검색 화면] GET 폼의 값은 Django Form과 ORM을 거쳐 검증·조회되며 현재 필터를 화면에 유지합니다. #}
 <link rel="stylesheet" href="{% static 'webapp/css/matpick_integrated.css' %}">
 <section class="mp-explore" aria-label="맛집 찾기">
   <header class="mp-pagebar">
@@ -52,6 +53,7 @@
     {% if form.category.errors %}<div class="mp-error">{{ form.category.errors }}</div>{% endif %}
   </form>
 
+{# 검증 오류가 없으면 페이지별 음식점 목록을 출력하며, 오류가 있으면 폼 오류를 보여줍니다. #}
   {% if not form.errors %}
     <p class="mp-count">음식점 {{ page.paginator.count }}곳</p>
     <ul class="mp-restaurants">
